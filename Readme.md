@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Stepan Avdevich](https://up.htmlacademy.ru/javascript/16/user/570493).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Тимоновский].
 
 ---
 
