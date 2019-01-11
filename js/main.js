@@ -40,8 +40,6 @@ var makeCommentString = function () {
   return comment;
 };
 
-console.log(makeCommentString());
-
 var makeComment = function () {
   var commentObject = {
     'avatar': 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
@@ -51,12 +49,11 @@ var makeComment = function () {
   return commentObject;
 };
 
-console.log(makeComment());
 
 var makeArrayComments = function () {
   var arrayComments = [];
 
-  for (i = 0; i < getRandomNum(10, 19); i++) {
+  for (var i = 0; i < getRandomNum(10, 19); i++) {
     arrayComments.push(makeComment());
   }
 
@@ -79,3 +76,22 @@ var makeArrayPosts = function () {
   }
   return arrayPosts;
 };
+
+var makePosts = makeArrayPosts();
+var similarListElement = document.querySelector('.pictures');
+var similarPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+var renderPhotos = function (photo) {
+  var photoElement = similarPostTemplate.cloneNode(true);
+  photoElement.querySelector('.picture__img').src = photo.url;
+  photoElement.querySelector('.picture__likes').textContent = photo.likes;
+  photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+
+  return photoElement;
+};
+
+var fragment = document.createDocumentFragment();
+for (var i = 0; i < CONST_POSTS; i++) {
+  fragment.appendChild(renderPhotos(makePosts[i]));
+}
+similarListElement.appendChild(fragment);
