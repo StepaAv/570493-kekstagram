@@ -5,6 +5,16 @@ var MIN_LIKE = 15;
 var MAX_LIKE = 200;
 var MIN_AVATARS = 1;
 var MAX_AVATARS = 6;
+var MIN_COMMENTS_STRING = 1;
+var MAX_COMMENTS_STRING = 3;
+var MIN_COMMENTS_ARRAY = 10;
+var MAX_COMMENTS_ARRAY = 20;
+
+var arrayComments = [];
+var arrayPosts = [];
+
+var putInSection = document.querySelector('.pictures');
+var templateSection = document.querySelector('#picture').content.querySelector('.picture');
 
 var commentsArray = [
   'Всё отлично!',
@@ -12,7 +22,7 @@ var commentsArray = [
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
 var namesArray = [
@@ -28,70 +38,68 @@ var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-var getRandomElement = function (element) {
+var getRandomSegment = function (element) {
   return element[Math.floor(Math.random() * element.length)];
 };
 
 var makeCommentString = function () {
   var comment = '';
-  for (var i = 0; i < getRandomNum(1, 3); i++) {
-    comment += getRandomElement(commentsArray) + ' ';
+  for (var i = 0; i < getRandomNum(MIN_COMMENTS_STRING, MAX_COMMENTS_STRING); i++) {
+    comment += getRandomSegment(commentsArray) + ' ';
   }
   return comment;
 };
 
-var makeComment = function () {
+var constructOneComment = function () {
   var commentObject = {
-    'avatar': 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
-    'message': makeCommentString(),
-    'name': getRandomElement(namesArray)
+    avatar: 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
+    message: makeCommentString(),
+    name: getRandomSegment(namesArray),
   };
   return commentObject;
 };
 
-
-var makeArrayComments = function () {
-  var arrayComments = [];
-
-  for (var i = 0; i < getRandomNum(10, 19); i++) {
-    arrayComments.push(makeComment());
+var makeArrayOfComments = function () {
+  for (var i = 0; i < getRandomNum(MIN_COMMENTS_ARRAY, MAX_COMMENTS_ARRAY); i++) {
+    arrayComments.push(constructOneComment());
   }
 
   return arrayComments;
 };
 
-var addPhotoPost = function (number) {
+var addPostPhoto = function (number) {
   var post = {
-    'url': 'photos/' + (number + 1) + '.jpg',
-    'likes': getRandomNum(MIN_LIKE, MAX_LIKE),
-    'comments': makeArrayComments()
+    url: 'photos/' + (number + 1) + '.jpg',
+    likes: getRandomNum(MIN_LIKE, MAX_LIKE),
+    comments: makeArrayOfComments(),
   };
   return post;
 };
 
-var makeArrayPosts = function () {
-  var arrayPosts = [];
+var makePostsArray = function () {
   for (var i = 0; i < CONST_POSTS; i++) {
-    arrayPosts.push(addPhotoPost(i));
+    arrayPosts.push(addPostPhoto(i));
   }
   return arrayPosts;
 };
 
-var makePosts = makeArrayPosts();
-var similarListElement = document.querySelector('.pictures');
-var similarPostTemplate = document.querySelector('#picture').content.querySelector('.picture');
+var assemblingPostPhoto = function (photo) {
+  var postPhotoElement = templateSection.cloneNode(true);
+  postPhotoElement.querySelector('.picture__img').src = photo.url;
+  postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
+  postPhotoElement.querySelector('.picture__comments').textContent = photo.comments.length;
 
-var renderPhotos = function (photo) {
-  var photoElement = similarPostTemplate.cloneNode(true);
-  photoElement.querySelector('.picture__img').src = photo.url;
-  photoElement.querySelector('.picture__likes').textContent = photo.likes;
-  photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-
-  return photoElement;
+  return postPhotoElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < CONST_POSTS; i++) {
-  fragment.appendChild(renderPhotos(makePosts[i]));
-}
-similarListElement.appendChild(fragment);
+
+var initPostPhotoArray = function () {
+  var makePosts = makePostsArray();
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < CONST_POSTS; i++) {
+    fragment.appendChild(assemblingPostPhoto(makePosts[i]));
+  }
+  putInSection.appendChild(fragment);
+};
+
+initPostPhotoArray();
