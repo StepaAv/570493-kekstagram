@@ -6,12 +6,9 @@ var MAX_LIKE = 200;
 var MIN_AVATARS = 1;
 var MAX_AVATARS = 6;
 var MIN_COMMENTS_STRING = 1;
-var MAX_COMMENTS_STRING = 3;
+var MAX_COMMENTS_STRING = 2;
 var MIN_COMMENTS_ARRAY = 10;
 var MAX_COMMENTS_ARRAY = 20;
-
-var arrayComments = [];
-var arrayPosts = [];
 
 var putInSection = document.querySelector('.pictures');
 var templateSection = document.querySelector('#picture').content.querySelector('.picture');
@@ -60,6 +57,7 @@ var constructOneComment = function () {
 };
 
 var makeArrayOfComments = function () {
+  var arrayComments = [];
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_ARRAY, MAX_COMMENTS_ARRAY); i++) {
     arrayComments.push(constructOneComment());
   }
@@ -77,6 +75,7 @@ var addPostPhoto = function (number) {
 };
 
 var makePostsArray = function () {
+  var arrayPosts = [];
   for (var i = 0; i < CONST_POSTS; i++) {
     arrayPosts.push(addPostPhoto(i));
   }
