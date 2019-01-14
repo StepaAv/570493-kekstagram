@@ -102,3 +102,47 @@ var initPostPhotoArray = function () {
 };
 
 initPostPhotoArray();
+
+// DOMASKA NOMER CHETYRE
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var uploadPhotoOpen = document.getElementById('upload-file');
+var uploadPhotoClose = document.getElementById('upload-cancel')
+var uploadPhotoForm = document.querySelector('.img-upload__overlay');
+
+var onPopupEscPress = function(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeUpload();
+  }
+};
+
+// ubirajet pojavlenije okna zagruzki foto
+uploadPhotoOpen.addEventListener('click', function (evt) {
+  evt.preventDefault();
+})
+
+var openUpload = function () {
+  uploadPhotoForm.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closeUpload = function () {
+  uploadPhotoForm.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+}
+
+uploadPhotoOpen.addEventListener('click', function() {
+  openUpload()
+});
+
+uploadPhotoClose.addEventListener('click', function () {
+  closeUpload()
+})
+
+uploadPhotoClose.addEventListener('keydown', function(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeUpload()
+  }
+});
+
