@@ -108,10 +108,10 @@ var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
 var uploadPhotoOpen = document.getElementById('upload-file');
-var uploadPhotoClose = document.getElementById('upload-cancel')
+var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 
-var onPopupEscPress = function(evt) {
+var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
@@ -120,7 +120,7 @@ var onPopupEscPress = function(evt) {
 // ubirajet pojavlenije okna zagruzki foto
 uploadPhotoOpen.addEventListener('click', function (evt) {
   evt.preventDefault();
-})
+});
 
 var openUpload = function () {
   uploadPhotoForm.classList.remove('hidden');
@@ -130,19 +130,40 @@ var openUpload = function () {
 var closeUpload = function () {
   uploadPhotoForm.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
-}
+};
 
-uploadPhotoOpen.addEventListener('click', function() {
-  openUpload()
+uploadPhotoOpen.addEventListener('click', function () {
+  openUpload();
 });
 
 uploadPhotoClose.addEventListener('click', function () {
-  closeUpload()
-})
+  closeUpload();
+});
 
-uploadPhotoClose.addEventListener('keydown', function(evt) {
+uploadPhotoClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closeUpload()
+    closeUpload();
   }
 });
 
+var zoomPhotoPlus = document.querySelector('.scale__control--bigger');
+var zoomPhotoMinus = document.querySelector('.scale__control--smaller');
+var zoomPhotoValue = document.querySelector('.scale__control--value');
+var imageScale = document.querySelector('.img-upload__preview');
+var valueStepPercent = '25';
+var valueStepScale = '0.25';
+
+imageScale.style.transform = 'scale(0.75)';
+zoomPhotoValue.value = '100%';
+
+var removingPhotoZoom = function () {
+  zoomPhotoValue.value = zoomPhotoValue.value - valueStepPercent;
+  imageScale.style.transform = imageScale.style.transform - valueStepScale;
+};
+
+
+zoomPhotoMinus.addEventListener('click', function () {
+  if (zoomPhotoValue.value >= '50%') {
+    removingPhotoZoom();
+  }
+});
