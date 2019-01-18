@@ -31,15 +31,15 @@ var namesArray = [
   'ActivateWindows',
 ];
 
-var getRandomNum = function(min, max) {
+var getRandomNum = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-var getRandomSegment = function(element) {
+var getRandomSegment = function (element) {
   return element[Math.floor(Math.random() * element.length)];
 };
 
-var makeCommentString = function() {
+var makeCommentString = function () {
   var comment = '';
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_STRING, MAX_COMMENTS_STRING); i++) {
     comment += getRandomSegment(commentsArray) + ' ';
@@ -47,7 +47,7 @@ var makeCommentString = function() {
   return comment;
 };
 
-var constructOneComment = function() {
+var constructOneComment = function () {
   var commentObject = {
     avatar: 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
     message: makeCommentString(),
@@ -56,7 +56,7 @@ var constructOneComment = function() {
   return commentObject;
 };
 
-var makeArrayOfComments = function() {
+var makeArrayOfComments = function () {
   var arrayComments = [];
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_ARRAY, MAX_COMMENTS_ARRAY); i++) {
     arrayComments.push(constructOneComment());
@@ -65,7 +65,7 @@ var makeArrayOfComments = function() {
   return arrayComments;
 };
 
-var addPostPhoto = function(number) {
+var addPostPhoto = function (number) {
   var post = {
     url: 'photos/' + (number + 1) + '.jpg',
     likes: getRandomNum(MIN_LIKE, MAX_LIKE),
@@ -74,7 +74,7 @@ var addPostPhoto = function(number) {
   return post;
 };
 
-var makePostsArray = function() {
+var makePostsArray = function () {
   var arrayPosts = [];
   for (var i = 0; i < CONST_POSTS; i++) {
     arrayPosts.push(addPostPhoto(i));
@@ -82,7 +82,7 @@ var makePostsArray = function() {
   return arrayPosts;
 };
 
-var assemblingPostPhoto = function(photo) {
+var assemblingPostPhoto = function (photo) {
   var postPhotoElement = templateSection.cloneNode(true);
   postPhotoElement.querySelector('.picture__img').src = photo.url;
   postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
@@ -91,7 +91,7 @@ var assemblingPostPhoto = function(photo) {
   return postPhotoElement;
 };
 
-var initPostPhotoArray = function() {
+var initPostPhotoArray = function () {
   var makePosts = makePostsArray();
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < CONST_POSTS; i++) {
@@ -106,68 +106,46 @@ initPostPhotoArray();
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
-// @oldfox
+
 var uploadInput = document.querySelector('#upload-file');
 
 var uploadPhotoOpen = document.getElementById('upload-file');
 var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 
-var onPopupEscPress = function(evt) {
+var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 };
 
-// @oldfox
-// открываем форму после того как выбрали изображение
-var onUploadInputChange = function(e) {
+var onUploadInputChange = function (e) {
   openUpload();
 };
 
 uploadInput.addEventListener('change', onUploadInputChange);
 
-// ubirajet pojavlenije okna zagruzki foto
-/*
-uploadPhotoOpen.addEventListener('click', function (evt) {
-  evt.preventDefault();
-});
 
-// ⚠️ preventDefault можно было делать в том же обработчике что и выполение открытия окна
-// но в любом случае это нам не нужно используем change открываем окно только после выбора фотки пользователем
-// см. выше стр.122
-uploadPhotoOpen.addEventListener('click', function(evt) {
-   evt.preventDefault();
-  openUpload();
-});
-*/
-
-var openUpload = function() {
+var openUpload = function () {
   uploadPhotoForm.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-var closeUpload = function() {
+var closeUpload = function () {
   uploadPhotoForm.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-/* ненужно
-uploadPhotoOpen.addEventListener('click', function() {
-  openUpload();
-});
-*/
 
-uploadPhotoClose.addEventListener('click', function() {
+uploadPhotoClose.addEventListener('click', function () {
   closeUpload();
 });
 
-uploadPhotoClose.addEventListener('keydown', function(evt) {
+uploadPhotoClose.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 });
-
 
 
 var zoomPhotoPlus = document.querySelector('.scale__control--bigger');
@@ -183,12 +161,11 @@ var IMG_MAX_SCALE = 100;
 var IMG_MIN_SCALE = 25;
 var imgScale = 100;
 
-var plusImgScale = function() {
+var plusImgScale = function () {
   var scale = imgScale + IMG_SCALE_STEP;
   if (scale > IMG_MAX_SCALE) {
     scale = IMG_MAX_SCALE;
   }
-
 
   imgScale = scale;
   zoomPhotoValue.value = scale + '%';
@@ -197,20 +174,98 @@ var plusImgScale = function() {
 
 zoomPhotoPlus.addEventListener('click', plusImgScale);
 
-
-
-var minusImgScale = function() {
+var minusImgScale = function () {
   var scale = imgScale - IMG_SCALE_STEP;
   if (scale < IMG_SCALE_STEP) {
     scale = IMG_MIN_SCALE;
   }
-
 
   imgScale = scale;
   zoomPhotoValue.value = scale + '%';
   imageScale.style.transform = 'scale(' + scale / 100 + ')';
 };
 
-
-
 zoomPhotoMinus.addEventListener('click', minusImgScale);
+
+// FILTERS
+
+var mainImage = document.querySelector('.img-upload__preview > img');
+var filterNone = document.getElementById('effect-none');
+var filterChrome = document.getElementById('effect-chrome');
+var filterSepia = document.getElementById('effect-sepia');
+var filterMarvin = document.getElementById('effect-marvin');
+var filterPhobos = document.getElementById('effect-phobos');
+var filterHeat = document.getElementById('effect-heat');
+
+var addingStyleNone = function () {
+  mainImage.classList.remove('effects__preview--chrome',
+      'effects__preview--marvin',
+      'effects__preview--phobos',
+      'effects__preview--heat',
+      'effects__preview--sepia');
+};
+var addingStyleChrome = function () {
+  addingStyleNone();
+  mainImage.classList.add('effects__preview--chrome');
+};
+var addingStyleMarvin = function () {
+  addingStyleNone();
+  mainImage.classList.add('effects__preview--marvin');
+};
+var addingStylePhobos = function () {
+  addingStyleNone();
+  mainImage.classList.add('effects__preview--phobos');
+};
+var addingStyleHeat = function () {
+  addingStyleNone();
+  mainImage.classList.add('effects__preview--heat');
+};
+var addingStyleSepia = function () {
+  addingStyleNone();
+  mainImage.classList.add('effects__preview--sepia');
+};
+
+filterChrome.addEventListener('click', addingStyleChrome);
+filterSepia.addEventListener('click', addingStyleSepia);
+filterMarvin.addEventListener('click', addingStyleMarvin);
+filterPhobos.addEventListener('click', addingStylePhobos);
+filterHeat.addEventListener('click', addingStyleHeat);
+filterNone.addEventListener('click', addingStyleNone);
+
+
+var effectLevelHandle = document.querySelector('.effect-level__pin');
+var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelValue = document.querySelector('.effect-level__value');
+var effectLevelDepth = document.querySelector('.effect-level__depth');
+
+effectLevelHandle.addEventListener('mousedown', function (evt) {
+  // evt.preventDeafault();
+
+  var startCoords = {
+    x: evt.clientX
+  };
+
+  var onMouseMove = function (moveEvt) {
+    var shift = {
+      x: startCoords.x - moveEvt.clientX
+    };
+
+    startCoords = {
+      x: moveEvt.clientX
+    };
+    // pikseli rezultat ----------- nachalnaja pozicija ----smeschenije
+    effectLevelHandle.style.left = (effectLevelHandle.offsetLeft - shift.x) + 'px';
+    effectLevelDepth.style.width = (effectLevelHandle.offsetLeft - shift.x) + 'px';
+  };
+
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDeafault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
