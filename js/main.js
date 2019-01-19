@@ -239,7 +239,7 @@ var effectLevelValue = document.querySelector('.effect-level__value');
 var effectLevelDepth = document.querySelector('.effect-level__depth');
 
 effectLevelHandle.addEventListener('mousedown', function (evt) {
-  // evt.preventDeafault();
+  var maxWidth = effectLevelLine.offsetWidth;
 
   var startCoords = {
     x: evt.clientX
@@ -253,14 +253,30 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     startCoords = {
       x: moveEvt.clientX
     };
-    // pikseli rezultat ----------- nachalnaja pozicija ----smeschenije
-    effectLevelHandle.style.left = (effectLevelHandle.offsetLeft - shift.x) + 'px';
-    effectLevelDepth.style.width = (effectLevelHandle.offsetLeft - shift.x) + 'px';
+
+    var offset = effectLevelHandle.offsetLeft - shift.x;
+    if (offset > maxWidth) {
+      offset = maxWidth;
+    }
+    if (offset < 0) {
+      offset = 0;
+    }
+    effectLevelHandle.style.left = offset + 'px';
+    effectLevelDepth.style.width = offset + 'px';
+
+// moj kusok koda
+    var calculatingEffectValue = function () {
+      var percentage = (offset * 100 / maxWidth);
+      var newLevelValue = Math.round(percentage);
+      return newLevelValue;
+    };
+    console.log(calculatingEffectValue());
   };
 
+  // filterChrome.style.filter = 'grayscale(' + 0.3 + ')';
 
   var onMouseUp = function (upEvt) {
-    upEvt.preventDeafault();
+    // upEvt.preventDefault();
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
@@ -268,4 +284,5 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
+
 });
