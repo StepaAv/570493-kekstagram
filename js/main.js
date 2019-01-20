@@ -196,6 +196,7 @@ zoomPhotoMinus.addEventListener('click', minusImgScale);
 
 // FILTERS
 
+// peremenyje filtrov
 var mainImage = document.querySelector('.img-upload__preview > img');
 var filterNone = document.getElementById('effect-none');
 var filterChrome = document.getElementById('effect-chrome');
@@ -204,48 +205,76 @@ var filterMarvin = document.getElementById('effect-marvin');
 var filterPhobos = document.getElementById('effect-phobos');
 var filterHeat = document.getElementById('effect-heat');
 var effectList = document.querySelector('.effects__list');
+var effectBar = document.querySelector('.img-upload__effect-level');
 
+// peremenyje slaidera
+var effectLevelHandle = document.querySelector('.effect-level__pin');
+var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelValue = document.querySelector('.effect-level__value');
+var effectLevelDepth = document.querySelector('.effect-level__depth');
+
+// dobavlenije filtrov pri klike
 var addingStyleNone = function () {
   mainImage.classList.remove('effects__preview--chrome',
       'effects__preview--marvin',
       'effects__preview--phobos',
       'effects__preview--heat',
       'effects__preview--sepia');
+  mainImage.style.filter = '';
+  removingEffectBar();
 };
+
+var removingEffectBar = function () {
+  effectBar.classList.add('hidden');
+};
+
+var addingEffectBar = function () {
+  effectBar.classList.remove('hidden');
+};
+
 var addingStyleChrome = function () {
   addingStyleNone();
+  addingEffectBar();
+  effectLevelHandle.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+  mainImage.style.filter = 'grayscale(1)';
   mainImage.classList.add('effects__preview--chrome');
 };
 var addingStyleMarvin = function () {
   addingStyleNone();
+  addingEffectBar();
+  effectLevelHandle.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+  mainImage.style.filter = 'invert(100%)';
   mainImage.classList.add('effects__preview--marvin');
 };
 var addingStylePhobos = function () {
   addingStyleNone();
+  addingEffectBar();
+  effectLevelHandle.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+  mainImage.style.filter = 'blur(3px)';
   mainImage.classList.add('effects__preview--phobos');
 };
 var addingStyleHeat = function () {
   addingStyleNone();
+  addingEffectBar();
+  effectLevelHandle.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+  mainImage.style.filter = 'brightness(3)';
   mainImage.classList.add('effects__preview--heat');
 };
 var addingStyleSepia = function () {
   addingStyleNone();
+  addingEffectBar();
+  effectLevelHandle.style.left = '100%';
+  effectLevelDepth.style.width = '100%';
+  mainImage.style.filter = 'sepia(1)';
   mainImage.classList.add('effects__preview--sepia');
 };
 
-filterChrome.addEventListener('click', addingStyleChrome);
-filterSepia.addEventListener('click', addingStyleSepia);
-filterMarvin.addEventListener('click', addingStyleMarvin);
-filterPhobos.addEventListener('click', addingStylePhobos);
-filterHeat.addEventListener('click', addingStyleHeat);
-filterNone.addEventListener('click', addingStyleNone);
 
-
-var effectLevelHandle = document.querySelector('.effect-level__pin');
-var effectLevelLine = document.querySelector('.effect-level__line');
-var effectLevelValue = document.querySelector('.effect-level__value');
-var effectLevelDepth = document.querySelector('.effect-level__depth');
-
+// dvizhenije polzunka slaidera
 effectLevelHandle.addEventListener('mousedown', function (evt) {
   var maxWidth = effectLevelLine.offsetWidth;
 
@@ -272,15 +301,15 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     effectLevelHandle.style.left = offset + 'px';
     effectLevelDepth.style.width = offset + 'px';
 
-    // moj kusok koda
+    // procentnoje sootnozhenije polozhenija polzunka
     var calculatingEffectValue = function () {
       var percentage = (offset * 100 / maxWidth);
       var newLevelValue = Math.round(percentage);
       return newLevelValue;
     };
-    console.log(calculatingEffectValue());
+    var num = calculatingEffectValue();
+    getCurrentFilter(num);
   };
-
 
   var onMouseUp = function (upEvt) {
 
@@ -293,17 +322,61 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
 
 });
 
-var currentFilter;
+var COEF_CHROME = 100;
+var COEF_SEPIA = 100;
+var COEF_MARVIN = '%';
+var COEF_PHOBOS = 33.3;
+var COEF_HEAT = 33.3;
 
-var getCurrentFilter = function () {
+// regulirovka filtrov pri slaidere
+var currentFilter;
+var getCurrentFilter = function (num) {
   currentFilter = effectList.querySelector('input[type=radio]:checked');
 
-  switch (currentFilter) {
-    case filterChrome:
-      return console.log('test');
+  var mathChrome = function () {
+    mainImage.style.filter = 'grayscale(' + num / COEF_CHROME + ')';
+  };
+
+  var mathSepia = function () {
+    mainImage.style.filter = 'sepia(' + num / COEF_SEPIA + ')';
+  };
+
+  var mathMarvin = function () {
+    mainImage.style.filter = 'invert(' + num + COEF_MARVIN + ')';
+  };
+
+  var mathPhobos = function () {
+    mainImage.style.filter = 'blur(' + num / COEF_PHOBOS + 'px' + ')';
+  };
+
+  var mathHeat = function () {
+    var mathHeatSumm = num / COEF_HEAT;
+    if (mathHeatSumm < 1) {
+      return 1;
+    }
+    mainImage.style.filter = 'brightness(' + mathHeatSumm + ')';
+  };
+
+  switch (currentFilter.value) {
+    case filterChrome.value:
+      return mathChrome();
+    case filterSepia.value:
+      return mathSepia();
+    case filterMarvin.value:
+      return mathMarvin();
+    case filterPhobos.value:
+      return mathPhobos();
+    case filterHeat.value:
+      return mathHeat();
     default:
       return '';
   }
 };
 
-getCurrentFilter();
+// priminenije filtrov po kliku
+filterChrome.addEventListener('click', addingStyleChrome);
+filterSepia.addEventListener('click', addingStyleSepia);
+filterMarvin.addEventListener('click', addingStyleMarvin);
+filterPhobos.addEventListener('click', addingStylePhobos);
+filterHeat.addEventListener('click', addingStyleHeat);
+filterNone.addEventListener('click', addingStyleNone);
