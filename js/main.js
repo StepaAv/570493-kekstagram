@@ -278,6 +278,7 @@ var addingStyleSepia = function() {
 };
 
 // dvizhenije polzunka slaidera
+// tuta vse sdelano
 effectLevelHandle.addEventListener('mousedown', function(evt) {
   var maxWidth = effectLevelLine.offsetWidth;
 
