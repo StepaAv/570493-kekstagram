@@ -115,7 +115,6 @@ var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 var textAreaInput = document.querySelector('.text__description');
 
 
-
 // zakryvajet okno na esc
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
@@ -151,9 +150,9 @@ uploadPhotoClose.addEventListener('keydown', function (evt) {
   }
 });
 
- textAreaInput.addEventListener('keydown', function (evt) {
-    evt.stopPropagation();
-  });
+textAreaInput.addEventListener('keydown', function (evt) {
+  evt.stopPropagation();
+});
 
 
 var zoomPhotoPlus = document.querySelector('.scale__control--bigger');
@@ -273,7 +272,7 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     effectLevelHandle.style.left = offset + 'px';
     effectLevelDepth.style.width = offset + 'px';
 
-// moj kusok koda
+    // moj kusok koda
     var calculatingEffectValue = function () {
       var percentage = (offset * 100 / maxWidth);
       var newLevelValue = Math.round(percentage);
@@ -296,13 +295,15 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
 
 var currentFilter;
 
- var getCurrentFilter = function () {
-    currentFilter = effectList.querySelector('input[type=radio]:checked');
+var getCurrentFilter = function () {
+  currentFilter = effectList.querySelector('input[type=radio]:checked');
 
-    switch (currentFilter) {
-      case filterChrome:
-        return console.log("test");
-      default:
-        return '';
-    }
-  };
+  switch (currentFilter) {
+    case filterChrome:
+      return console.log('test');
+    default:
+      return '';
+  }
+};
+
+getCurrentFilter();
