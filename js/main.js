@@ -171,6 +171,7 @@ uploadPhotoClose.addEventListener('keydown', function(evt) {
   }
 });
 
+// vot tuta abort Esc knopki
 textAreaInput.addEventListener('keydown', function(evt) {
   evt.stopPropagation();
 });
