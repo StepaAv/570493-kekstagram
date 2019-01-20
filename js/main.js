@@ -15,11 +15,13 @@ var COEF_MARVIN = '%';
 var COEF_PHOBOS = 33.3;
 var COEF_HEAT = 33.3;
 var ESC_KEYCODE = 27;
+
 var ENTER_KEYCODE = 13;
 
 var uploadInput = document.querySelector('#upload-file');
 
 var uploadPhotoOpen = document.getElementById('upload-file');
+
 var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 var textAreaInput = document.querySelector('.text__description');
@@ -39,7 +41,9 @@ var effectBar = document.querySelector('.img-upload__effect-level');
 // peremenyje slaidera
 var effectLevelHandle = document.querySelector('.effect-level__pin');
 var effectLevelLine = document.querySelector('.effect-level__line');
+
 var effectLevelValue = document.querySelector('.effect-level__value');
+
 var effectLevelDepth = document.querySelector('.effect-level__depth');
 
 var putInSection = document.querySelector('.pictures');
@@ -67,6 +71,7 @@ var namesArray = [
 var currentFilter;
 
 var getRandomNum = function(min, max) {
+
   return Math.floor(Math.random() * (max - min) + min);
 };
 
@@ -126,7 +131,9 @@ var assemblingPostPhoto = function(photo) {
   return postPhotoElement;
 };
 
+
 var initPostPhotoArray = function() {
+
   var makePosts = makePostsArray();
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < CONST_POSTS; i++) {
@@ -138,7 +145,9 @@ var initPostPhotoArray = function() {
 initPostPhotoArray();
 
 // zakryvajet okno na esc
+
 var onPopupEscPress = function(evt) {
+
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
@@ -149,6 +158,7 @@ var onUploadInputChange = function(e) {
 };
 
 uploadInput.addEventListener('change', onUploadInputChange);
+
 
 var openUpload = function() {
   uploadPhotoForm.classList.remove('hidden');
@@ -166,6 +176,7 @@ uploadPhotoClose.addEventListener('click', function() {
 });
 
 uploadPhotoClose.addEventListener('keydown', function(evt) {
+
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
@@ -173,6 +184,7 @@ uploadPhotoClose.addEventListener('keydown', function(evt) {
 
 // vot tuta abort Esc knopki
 textAreaInput.addEventListener('keydown', function(evt) {
+
   evt.stopPropagation();
 });
 
@@ -189,6 +201,7 @@ var IMG_MAX_SCALE = 100;
 var IMG_MIN_SCALE = 25;
 var imgScale = 100;
 
+
 var plusImgScale = function() {
   var scale = imgScale + IMG_SCALE_STEP;
   if (scale > IMG_MAX_SCALE) {
@@ -201,6 +214,7 @@ var plusImgScale = function() {
 };
 
 zoomPhotoPlus.addEventListener('click', plusImgScale);
+
 
 var minusImgScale = function() {
   var scale = imgScale - IMG_SCALE_STEP;
@@ -216,6 +230,7 @@ var minusImgScale = function() {
 zoomPhotoMinus.addEventListener('click', minusImgScale);
 
 // dobavlenije filtrov pri klike
+
 var addingStyleNone = function() {
   mainImage.classList.remove(
     'effects__preview--chrome',
@@ -227,6 +242,7 @@ var addingStyleNone = function() {
   mainImage.style.filter = '';
   removingEffectBar();
 };
+
 
 var removingEffectBar = function() {
   effectBar.classList.add('hidden');
@@ -297,6 +313,7 @@ effectLevelHandle.addEventListener('mousedown', function(evt) {
     var num = calculatingEffectValue();
     setCurrentFilterValue(num);
   };
+
 
   var onMouseUp = function(upEvt) {
     document.removeEventListener('mousemove', onMouseMove);
