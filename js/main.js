@@ -15,9 +15,11 @@ var COEF_MARVIN = '%';
 var COEF_PHOBOS = 33.3;
 var COEF_HEAT = 33.3;
 var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var uploadInput = document.querySelector('#upload-file');
 
+var uploadPhotoOpen = document.getElementById('upload-file');
 var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 var textAreaInput = document.querySelector('.text__description');
@@ -37,6 +39,7 @@ var effectBar = document.querySelector('.img-upload__effect-level');
 // peremenyje slaidera
 var effectLevelHandle = document.querySelector('.effect-level__pin');
 var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelValue = document.querySelector('.effect-level__value');
 var effectLevelDepth = document.querySelector('.effect-level__depth');
 
 var putInSection = document.querySelector('.pictures');
@@ -63,15 +66,15 @@ var namesArray = [
 // regulirovka filtrov pri slaidere
 var currentFilter;
 
-var getRandomNum = function (min, max) {
+var getRandomNum = function(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-var getRandomSegment = function (element) {
+var getRandomSegment = function(element) {
   return element[Math.floor(Math.random() * element.length)];
 };
 
-var makeCommentString = function () {
+var makeCommentString = function() {
   var comment = '';
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_STRING, MAX_COMMENTS_STRING); i++) {
     comment += getRandomSegment(commentsArray) + ' ';
@@ -79,7 +82,7 @@ var makeCommentString = function () {
   return comment;
 };
 
-var constructOneComment = function () {
+var constructOneComment = function() {
   var commentObject = {
     avatar: 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
     message: makeCommentString(),
@@ -88,7 +91,7 @@ var constructOneComment = function () {
   return commentObject;
 };
 
-var makeArrayOfComments = function () {
+var makeArrayOfComments = function() {
   var arrayComments = [];
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_ARRAY, MAX_COMMENTS_ARRAY); i++) {
     arrayComments.push(constructOneComment());
@@ -97,7 +100,7 @@ var makeArrayOfComments = function () {
   return arrayComments;
 };
 
-var addPostPhoto = function (number) {
+var addPostPhoto = function(number) {
   var post = {
     url: 'photos/' + (number + 1) + '.jpg',
     likes: getRandomNum(MIN_LIKE, MAX_LIKE),
@@ -106,7 +109,7 @@ var addPostPhoto = function (number) {
   return post;
 };
 
-var makePostsArray = function () {
+var makePostsArray = function() {
   var arrayPosts = [];
   for (var i = 0; i < CONST_POSTS; i++) {
     arrayPosts.push(addPostPhoto(i));
@@ -114,7 +117,7 @@ var makePostsArray = function () {
   return arrayPosts;
 };
 
-var assemblingPostPhoto = function (photo) {
+var assemblingPostPhoto = function(photo) {
   var postPhotoElement = templateSection.cloneNode(true);
   postPhotoElement.querySelector('.picture__img').src = photo.url;
   postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
@@ -123,7 +126,7 @@ var assemblingPostPhoto = function (photo) {
   return postPhotoElement;
 };
 
-var initPostPhotoArray = function () {
+var initPostPhotoArray = function() {
   var makePosts = makePostsArray();
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < CONST_POSTS; i++) {
@@ -135,40 +138,40 @@ var initPostPhotoArray = function () {
 initPostPhotoArray();
 
 // zakryvajet okno na esc
-var onPopupEscPress = function (evt) {
+var onPopupEscPress = function(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 };
 
-var onUploadInputChange = function () {
+var onUploadInputChange = function(e) {
   openUpload();
 };
 
 uploadInput.addEventListener('change', onUploadInputChange);
 
-var openUpload = function () {
+var openUpload = function() {
   uploadPhotoForm.classList.remove('hidden');
   addingStyleNone();
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-var closeUpload = function () {
+var closeUpload = function() {
   uploadPhotoForm.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-uploadPhotoClose.addEventListener('click', function () {
+uploadPhotoClose.addEventListener('click', function() {
   closeUpload();
 });
 
-uploadPhotoClose.addEventListener('keydown', function (evt) {
+uploadPhotoClose.addEventListener('keydown', function(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 });
 
-textAreaInput.addEventListener('keydown', function (evt) {
+textAreaInput.addEventListener('keydown', function(evt) {
   evt.stopPropagation();
 });
 
@@ -185,7 +188,7 @@ var IMG_MAX_SCALE = 100;
 var IMG_MIN_SCALE = 25;
 var imgScale = 100;
 
-var plusImgScale = function () {
+var plusImgScale = function() {
   var scale = imgScale + IMG_SCALE_STEP;
   if (scale > IMG_MAX_SCALE) {
     scale = IMG_MAX_SCALE;
@@ -198,7 +201,7 @@ var plusImgScale = function () {
 
 zoomPhotoPlus.addEventListener('click', plusImgScale);
 
-var minusImgScale = function () {
+var minusImgScale = function() {
   var scale = imgScale - IMG_SCALE_STEP;
   if (scale < IMG_SCALE_STEP) {
     scale = IMG_MIN_SCALE;
@@ -212,27 +215,27 @@ var minusImgScale = function () {
 zoomPhotoMinus.addEventListener('click', minusImgScale);
 
 // dobavlenije filtrov pri klike
-var addingStyleNone = function () {
+var addingStyleNone = function() {
   mainImage.classList.remove(
-      'effects__preview--chrome',
-      'effects__preview--marvin',
-      'effects__preview--phobos',
-      'effects__preview--heat',
-      'effects__preview--sepia'
+    'effects__preview--chrome',
+    'effects__preview--marvin',
+    'effects__preview--phobos',
+    'effects__preview--heat',
+    'effects__preview--sepia'
   );
   mainImage.style.filter = '';
   removingEffectBar();
 };
 
-var removingEffectBar = function () {
+var removingEffectBar = function() {
   effectBar.classList.add('hidden');
 };
 
-var addingEffectBar = function () {
+var addingEffectBar = function() {
   effectBar.classList.remove('hidden');
 };
 
-var setFilter = function (filter, style) {
+var setFilter = function(filter, style) {
   addingStyleNone();
   addingEffectBar();
   effectLevelHandle.style.left = '100%';
@@ -241,31 +244,31 @@ var setFilter = function (filter, style) {
   mainImage.classList.add(style);
 };
 
-var addingStyleChrome = function () {
+var addingStyleChrome = function() {
   setFilter('grayscale(1)', 'effects__preview--chrome');
 };
-var addingStyleMarvin = function () {
+var addingStyleMarvin = function() {
   setFilter('invert(100%)', 'effects__preview--marvin');
 };
-var addingStylePhobos = function () {
+var addingStylePhobos = function() {
   setFilter('blur(3px)', 'effects__preview--phobos');
 };
-var addingStyleHeat = function () {
+var addingStyleHeat = function() {
   setFilter('brightness(3)', 'effects__preview--heat');
 };
-var addingStyleSepia = function () {
+var addingStyleSepia = function() {
   setFilter('sepia(1)', 'effects__preview--sepia');
 };
 
 // dvizhenije polzunka slaidera
-effectLevelHandle.addEventListener('mousedown', function (evt) {
+effectLevelHandle.addEventListener('mousedown', function(evt) {
   var maxWidth = effectLevelLine.offsetWidth;
 
   var startCoords = {
     x: evt.clientX,
   };
 
-  var onMouseMove = function (moveEvt) {
+  var onMouseMove = function(moveEvt) {
     var shift = {
       x: startCoords.x - moveEvt.clientX,
     };
@@ -285,7 +288,7 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     effectLevelDepth.style.width = offset + 'px';
 
     // procentnoje sootnozhenije polozhenija polzunka
-    var calculatingEffectValue = function () {
+    var calculatingEffectValue = function() {
       var percentage = (offset * 100) / maxWidth;
       var newLevelValue = Math.round(percentage);
       return newLevelValue;
@@ -294,7 +297,7 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     setCurrentFilterValue(num);
   };
 
-  var onMouseUp = function () {
+  var onMouseUp = function(upEvt) {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
@@ -303,7 +306,7 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
   document.addEventListener('mouseup', onMouseUp);
 });
 
-var setCurrentFilterValue = function (num) {
+var setCurrentFilterValue = function(num) {
   currentFilter = effectList.querySelector('input[type=radio]:checked');
 
   switch (currentFilter.value) {
