@@ -112,7 +112,11 @@ var uploadInput = document.querySelector('#upload-file');
 var uploadPhotoOpen = document.getElementById('upload-file');
 var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
+var textAreaInput = document.querySelector('.text__description');
 
+
+
+// zakryvajet okno na esc
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
@@ -146,6 +150,10 @@ uploadPhotoClose.addEventListener('keydown', function (evt) {
     closeUpload();
   }
 });
+
+ textAreaInput.addEventListener('keydown', function (evt) {
+    evt.stopPropagation();
+  });
 
 
 var zoomPhotoPlus = document.querySelector('.scale__control--bigger');
@@ -196,6 +204,7 @@ var filterSepia = document.getElementById('effect-sepia');
 var filterMarvin = document.getElementById('effect-marvin');
 var filterPhobos = document.getElementById('effect-phobos');
 var filterHeat = document.getElementById('effect-heat');
+var effectList = document.querySelector('.effects__list');
 
 var addingStyleNone = function () {
   mainImage.classList.remove('effects__preview--chrome',
@@ -273,10 +282,8 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     console.log(calculatingEffectValue());
   };
 
-  // filterChrome.style.filter = 'grayscale(' + 0.3 + ')';
 
   var onMouseUp = function (upEvt) {
-    // upEvt.preventDefault();
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
@@ -286,3 +293,16 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
   document.addEventListener('mouseup', onMouseUp);
 
 });
+
+var currentFilter;
+
+ var getCurrentFilter = function () {
+    currentFilter = effectList.querySelector('input[type=radio]:checked');
+
+    switch (currentFilter) {
+      case filterChrome:
+        return console.log("test");
+      default:
+        return '';
+    }
+  };
