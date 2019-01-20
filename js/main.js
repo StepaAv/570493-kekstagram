@@ -9,6 +9,38 @@ var MIN_COMMENTS_STRING = 1;
 var MAX_COMMENTS_STRING = 2;
 var MIN_COMMENTS_ARRAY = 10;
 var MAX_COMMENTS_ARRAY = 20;
+var COEF_CHROME = 100;
+var COEF_SEPIA = 100;
+var COEF_MARVIN = '%';
+var COEF_PHOBOS = 33.3;
+var COEF_HEAT = 33.3;
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var uploadInput = document.querySelector('#upload-file');
+
+var uploadPhotoOpen = document.getElementById('upload-file');
+var uploadPhotoClose = document.getElementById('upload-cancel');
+var uploadPhotoForm = document.querySelector('.img-upload__overlay');
+var textAreaInput = document.querySelector('.text__description');
+// FILTERS
+
+// peremenyje filtrov
+var mainImage = document.querySelector('.img-upload__preview > img');
+var filterNone = document.getElementById('effect-none');
+var filterChrome = document.getElementById('effect-chrome');
+var filterSepia = document.getElementById('effect-sepia');
+var filterMarvin = document.getElementById('effect-marvin');
+var filterPhobos = document.getElementById('effect-phobos');
+var filterHeat = document.getElementById('effect-heat');
+var effectList = document.querySelector('.effects__list');
+var effectBar = document.querySelector('.img-upload__effect-level');
+
+// peremenyje slaidera
+var effectLevelHandle = document.querySelector('.effect-level__pin');
+var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelValue = document.querySelector('.effect-level__value');
+var effectLevelDepth = document.querySelector('.effect-level__depth');
 
 var putInSection = document.querySelector('.pictures');
 var templateSection = document.querySelector('#picture').content.querySelector('.picture');
@@ -31,15 +63,18 @@ var namesArray = [
   'ActivateWindows',
 ];
 
-var getRandomNum = function (min, max) {
+// regulirovka filtrov pri slaidere
+var currentFilter;
+
+var getRandomNum = function(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-var getRandomSegment = function (element) {
+var getRandomSegment = function(element) {
   return element[Math.floor(Math.random() * element.length)];
 };
 
-var makeCommentString = function () {
+var makeCommentString = function() {
   var comment = '';
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_STRING, MAX_COMMENTS_STRING); i++) {
     comment += getRandomSegment(commentsArray) + ' ';
@@ -47,7 +82,7 @@ var makeCommentString = function () {
   return comment;
 };
 
-var constructOneComment = function () {
+var constructOneComment = function() {
   var commentObject = {
     avatar: 'img/avatar-' + getRandomNum(MIN_AVATARS, MAX_AVATARS + 1) + '.svg',
     message: makeCommentString(),
@@ -56,7 +91,7 @@ var constructOneComment = function () {
   return commentObject;
 };
 
-var makeArrayOfComments = function () {
+var makeArrayOfComments = function() {
   var arrayComments = [];
   for (var i = 0; i < getRandomNum(MIN_COMMENTS_ARRAY, MAX_COMMENTS_ARRAY); i++) {
     arrayComments.push(constructOneComment());
@@ -65,7 +100,7 @@ var makeArrayOfComments = function () {
   return arrayComments;
 };
 
-var addPostPhoto = function (number) {
+var addPostPhoto = function(number) {
   var post = {
     url: 'photos/' + (number + 1) + '.jpg',
     likes: getRandomNum(MIN_LIKE, MAX_LIKE),
@@ -74,7 +109,7 @@ var addPostPhoto = function (number) {
   return post;
 };
 
-var makePostsArray = function () {
+var makePostsArray = function() {
   var arrayPosts = [];
   for (var i = 0; i < CONST_POSTS; i++) {
     arrayPosts.push(addPostPhoto(i));
@@ -82,7 +117,7 @@ var makePostsArray = function () {
   return arrayPosts;
 };
 
-var assemblingPostPhoto = function (photo) {
+var assemblingPostPhoto = function(photo) {
   var postPhotoElement = templateSection.cloneNode(true);
   postPhotoElement.querySelector('.picture__img').src = photo.url;
   postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
@@ -91,7 +126,7 @@ var assemblingPostPhoto = function (photo) {
   return postPhotoElement;
 };
 
-var initPostPhotoArray = function () {
+var initPostPhotoArray = function() {
   var makePosts = makePostsArray();
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < CONST_POSTS; i++) {
@@ -102,58 +137,43 @@ var initPostPhotoArray = function () {
 
 initPostPhotoArray();
 
-// DOMASKA NOMER CHETYRE
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
-
-
-var uploadInput = document.querySelector('#upload-file');
-
-var uploadPhotoOpen = document.getElementById('upload-file');
-var uploadPhotoClose = document.getElementById('upload-cancel');
-var uploadPhotoForm = document.querySelector('.img-upload__overlay');
-var textAreaInput = document.querySelector('.text__description');
-
-
 // zakryvajet okno na esc
-var onPopupEscPress = function (evt) {
+var onPopupEscPress = function(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 };
 
-var onUploadInputChange = function (e) {
+var onUploadInputChange = function(e) {
   openUpload();
 };
 
 uploadInput.addEventListener('change', onUploadInputChange);
 
-
-var openUpload = function () {
+var openUpload = function() {
   uploadPhotoForm.classList.remove('hidden');
+  addingStyleNone();
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-var closeUpload = function () {
+var closeUpload = function() {
   uploadPhotoForm.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
-
-uploadPhotoClose.addEventListener('click', function () {
+uploadPhotoClose.addEventListener('click', function() {
   closeUpload();
 });
 
-uploadPhotoClose.addEventListener('keydown', function (evt) {
+uploadPhotoClose.addEventListener('keydown', function(evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeUpload();
   }
 });
 
-textAreaInput.addEventListener('keydown', function (evt) {
+textAreaInput.addEventListener('keydown', function(evt) {
   evt.stopPropagation();
 });
-
 
 var zoomPhotoPlus = document.querySelector('.scale__control--bigger');
 var zoomPhotoMinus = document.querySelector('.scale__control--smaller');
@@ -168,7 +188,7 @@ var IMG_MAX_SCALE = 100;
 var IMG_MIN_SCALE = 25;
 var imgScale = 100;
 
-var plusImgScale = function () {
+var plusImgScale = function() {
   var scale = imgScale + IMG_SCALE_STEP;
   if (scale > IMG_MAX_SCALE) {
     scale = IMG_MAX_SCALE;
@@ -181,7 +201,7 @@ var plusImgScale = function () {
 
 zoomPhotoPlus.addEventListener('click', plusImgScale);
 
-var minusImgScale = function () {
+var minusImgScale = function() {
   var scale = imgScale - IMG_SCALE_STEP;
   if (scale < IMG_SCALE_STEP) {
     scale = IMG_MIN_SCALE;
@@ -194,101 +214,67 @@ var minusImgScale = function () {
 
 zoomPhotoMinus.addEventListener('click', minusImgScale);
 
-// FILTERS
-
-// peremenyje filtrov
-var mainImage = document.querySelector('.img-upload__preview > img');
-var filterNone = document.getElementById('effect-none');
-var filterChrome = document.getElementById('effect-chrome');
-var filterSepia = document.getElementById('effect-sepia');
-var filterMarvin = document.getElementById('effect-marvin');
-var filterPhobos = document.getElementById('effect-phobos');
-var filterHeat = document.getElementById('effect-heat');
-var effectList = document.querySelector('.effects__list');
-var effectBar = document.querySelector('.img-upload__effect-level');
-
-// peremenyje slaidera
-var effectLevelHandle = document.querySelector('.effect-level__pin');
-var effectLevelLine = document.querySelector('.effect-level__line');
-var effectLevelValue = document.querySelector('.effect-level__value');
-var effectLevelDepth = document.querySelector('.effect-level__depth');
-
 // dobavlenije filtrov pri klike
-var addingStyleNone = function () {
-  mainImage.classList.remove('effects__preview--chrome',
-      'effects__preview--marvin',
-      'effects__preview--phobos',
-      'effects__preview--heat',
-      'effects__preview--sepia');
+var addingStyleNone = function() {
+  mainImage.classList.remove(
+    'effects__preview--chrome',
+    'effects__preview--marvin',
+    'effects__preview--phobos',
+    'effects__preview--heat',
+    'effects__preview--sepia'
+  );
   mainImage.style.filter = '';
   removingEffectBar();
 };
 
-var removingEffectBar = function () {
+var removingEffectBar = function() {
   effectBar.classList.add('hidden');
 };
 
-var addingEffectBar = function () {
+var addingEffectBar = function() {
   effectBar.classList.remove('hidden');
 };
 
-var addingStyleChrome = function () {
+var setFilter = function(filter, style) {
   addingStyleNone();
   addingEffectBar();
   effectLevelHandle.style.left = '100%';
   effectLevelDepth.style.width = '100%';
-  mainImage.style.filter = 'grayscale(1)';
-  mainImage.classList.add('effects__preview--chrome');
-};
-var addingStyleMarvin = function () {
-  addingStyleNone();
-  addingEffectBar();
-  effectLevelHandle.style.left = '100%';
-  effectLevelDepth.style.width = '100%';
-  mainImage.style.filter = 'invert(100%)';
-  mainImage.classList.add('effects__preview--marvin');
-};
-var addingStylePhobos = function () {
-  addingStyleNone();
-  addingEffectBar();
-  effectLevelHandle.style.left = '100%';
-  effectLevelDepth.style.width = '100%';
-  mainImage.style.filter = 'blur(3px)';
-  mainImage.classList.add('effects__preview--phobos');
-};
-var addingStyleHeat = function () {
-  addingStyleNone();
-  addingEffectBar();
-  effectLevelHandle.style.left = '100%';
-  effectLevelDepth.style.width = '100%';
-  mainImage.style.filter = 'brightness(3)';
-  mainImage.classList.add('effects__preview--heat');
-};
-var addingStyleSepia = function () {
-  addingStyleNone();
-  addingEffectBar();
-  effectLevelHandle.style.left = '100%';
-  effectLevelDepth.style.width = '100%';
-  mainImage.style.filter = 'sepia(1)';
-  mainImage.classList.add('effects__preview--sepia');
+  mainImage.style.filter = filter;
+  mainImage.classList.add(style);
 };
 
+var addingStyleChrome = function() {
+  setFilter('grayscale(1)', 'effects__preview--chrome');
+};
+var addingStyleMarvin = function() {
+  setFilter('invert(100%)', 'effects__preview--marvin');
+};
+var addingStylePhobos = function() {
+  setFilter('blur(3px)', 'effects__preview--phobos');
+};
+var addingStyleHeat = function() {
+  setFilter('brightness(3)', 'effects__preview--heat');
+};
+var addingStyleSepia = function() {
+  setFilter('sepia(1)', 'effects__preview--sepia');
+};
 
 // dvizhenije polzunka slaidera
-effectLevelHandle.addEventListener('mousedown', function (evt) {
+effectLevelHandle.addEventListener('mousedown', function(evt) {
   var maxWidth = effectLevelLine.offsetWidth;
 
   var startCoords = {
-    x: evt.clientX
+    x: evt.clientX,
   };
 
-  var onMouseMove = function (moveEvt) {
+  var onMouseMove = function(moveEvt) {
     var shift = {
-      x: startCoords.x - moveEvt.clientX
+      x: startCoords.x - moveEvt.clientX,
     };
 
     startCoords = {
-      x: moveEvt.clientX
+      x: moveEvt.clientX,
     };
 
     var offset = effectLevelHandle.offsetLeft - shift.x;
@@ -302,74 +288,47 @@ effectLevelHandle.addEventListener('mousedown', function (evt) {
     effectLevelDepth.style.width = offset + 'px';
 
     // procentnoje sootnozhenije polozhenija polzunka
-    var calculatingEffectValue = function () {
-      var percentage = (offset * 100 / maxWidth);
+    var calculatingEffectValue = function() {
+      var percentage = (offset * 100) / maxWidth;
       var newLevelValue = Math.round(percentage);
       return newLevelValue;
     };
     var num = calculatingEffectValue();
-    getCurrentFilter(num);
+    setCurrentFilterValue(num);
   };
 
-  var onMouseUp = function (upEvt) {
-
+  var onMouseUp = function(upEvt) {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-
 });
 
-var COEF_CHROME = 100;
-var COEF_SEPIA = 100;
-var COEF_MARVIN = '%';
-var COEF_PHOBOS = 33.3;
-var COEF_HEAT = 33.3;
-
-// regulirovka filtrov pri slaidere
-var currentFilter;
-var getCurrentFilter = function (num) {
+var setCurrentFilterValue = function(num) {
   currentFilter = effectList.querySelector('input[type=radio]:checked');
-
-  var mathChrome = function () {
-    mainImage.style.filter = 'grayscale(' + num / COEF_CHROME + ')';
-  };
-
-  var mathSepia = function () {
-    mainImage.style.filter = 'sepia(' + num / COEF_SEPIA + ')';
-  };
-
-  var mathMarvin = function () {
-    mainImage.style.filter = 'invert(' + num + COEF_MARVIN + ')';
-  };
-
-  var mathPhobos = function () {
-    mainImage.style.filter = 'blur(' + num / COEF_PHOBOS + 'px' + ')';
-  };
-
-  var mathHeat = function () {
-    var mathHeatSumm = num / COEF_HEAT;
-    if (mathHeatSumm < 1) {
-      return 1;
-    }
-    mainImage.style.filter = 'brightness(' + mathHeatSumm + ')';
-  };
 
   switch (currentFilter.value) {
     case filterChrome.value:
-      return mathChrome();
+      mainImage.style.filter = 'grayscale(' + num / COEF_CHROME + ')';
+      break;
     case filterSepia.value:
-      return mathSepia();
+      mainImage.style.filter = 'sepia(' + num / COEF_SEPIA + ')';
+      break;
     case filterMarvin.value:
-      return mathMarvin();
+      mainImage.style.filter = 'invert(' + num + COEF_MARVIN + ')';
+      break;
     case filterPhobos.value:
-      return mathPhobos();
+      mainImage.style.filter = 'blur(' + num / COEF_PHOBOS + 'px' + ')';
+      break;
     case filterHeat.value:
-      return mathHeat();
+      var mathHeatSumm = num / COEF_HEAT;
+      mathHeatSumm = mathHeatSumm < 1 ? 1 : mathHeatSumm;
+      mainImage.style.filter = 'brightness(' + mathHeatSumm + ')';
+      break;
     default:
-      return '';
+      break;
   }
 };
 
