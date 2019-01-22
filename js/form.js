@@ -238,7 +238,7 @@
     }
   };
 
-  // priminenije filtrov po kliku
+  // priminenije filtrov po klik u
   filterChrome.addEventListener('click', addingStyleChrome);
   filterSepia.addEventListener('click', addingStyleSepia);
   filterMarvin.addEventListener('click', addingStyleMarvin);
