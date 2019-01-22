@@ -1,5 +1,6 @@
 'use strict';
 
+// миниатюры picture.js
 var CONST_POSTS = 25;
 var MIN_LIKE = 15;
 var MAX_LIKE = 200;
@@ -9,20 +10,22 @@ var MIN_COMMENTS_STRING = 1;
 var MAX_COMMENTS_STRING = 2;
 var MIN_COMMENTS_ARRAY = 10;
 var MAX_COMMENTS_ARRAY = 20;
+//  form.js
 var COEF_CHROME = 100;
 var COEF_SEPIA = 100;
 var COEF_MARVIN = '%';
 var COEF_PHOBOS = 33.3;
 var COEF_HEAT = 33.3;
+// util.js
 var ESC_KEYCODE = 27;
 
+// form.js
 var uploadInput = document.querySelector('#upload-file');
 var uploadPhotoClose = document.getElementById('upload-cancel');
 var uploadPhotoForm = document.querySelector('.img-upload__overlay');
 var textAreaInput = document.querySelector('.text__description');
-// FILTERS
 
-// peremenyje filtrov
+// form.js
 var mainImage = document.querySelector('.img-upload__preview > img');
 var filterNone = document.getElementById('effect-none');
 var filterChrome = document.getElementById('effect-chrome');
@@ -33,11 +36,12 @@ var filterHeat = document.getElementById('effect-heat');
 var effectList = document.querySelector('.effects__list');
 var effectBar = document.querySelector('.img-upload__effect-level');
 
-// peremenyje slaidera
+// form.js
 var effectLevelHandle = document.querySelector('.effect-level__pin');
 var effectLevelLine = document.querySelector('.effect-level__line');
 var effectLevelDepth = document.querySelector('.effect-level__depth');
 
+// picture.js
 var putInSection = document.querySelector('.pictures');
 var templateSection = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -59,7 +63,7 @@ var namesArray = [
   'ActivateWindows',
 ];
 
-// regulirovka filtrov pri slaidere
+// form.js
 var currentFilter;
 
 var getRandomNum = function (min, max) {
@@ -136,8 +140,7 @@ var initPostPhotoArray = function () {
 
 initPostPhotoArray();
 
-// zakryvajet okno na esc
-
+// util.js
 var onPopupEscPress = function (evt) {
 
   if (evt.keyCode === ESC_KEYCODE) {
@@ -174,7 +177,7 @@ uploadPhotoClose.addEventListener('keydown', function (evt) {
   }
 });
 
-// vot tuta abort Esc knopki
+// vot tuta abort Esc knopki  form.js
 textAreaInput.addEventListener('keydown', function (evt) {
 
   evt.stopPropagation();
@@ -271,6 +274,7 @@ var addingStyleSepia = function () {
 
 // dvizhenije polzunka slaidera
 // tuta vse sdelano
+// form.js
 effectLevelHandle.addEventListener('mousedown', function (evt) {
   var maxWidth = effectLevelLine.offsetWidth;
 
