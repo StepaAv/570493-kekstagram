@@ -96,15 +96,34 @@
   };
 
 
-  var initPostPhotoArray = function () {
+  // var initPostPhotoArray = function () {
 
-    var makePosts = makePostsArray();
+  //   var makePosts = makePostsArray();
+  //   var fragment = document.createDocumentFragment();
+  //   for (var i = 0; i < CONST_POSTS; i++) {
+  //     fragment.appendChild(assemblingPostPhoto(makePosts[i]));
+  //   }
+  //   putInSection.appendChild(fragment);
+  // };
+
+  // initPostPhotoArray();
+
+  // --------------
+
+  window.backend.load(function (photo) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < CONST_POSTS; i++) {
-      fragment.appendChild(assemblingPostPhoto(makePosts[i]));
+
+    for (var i = 0; i < photo.length; i++) {
+      fragment.appendChild(assemblingPostPhoto(photo[i]));
     }
     putInSection.appendChild(fragment);
-  };
 
-  initPostPhotoArray();
+  });
+
+// ---------------
+
+ // var soloPicture = document.querySelector('.pictures > img');
+
+ // soloPicture.addEventListener('click', window.solopic.showBigPicture);
+// window.solopic.showBigPicture();
 })();
