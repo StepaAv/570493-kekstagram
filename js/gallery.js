@@ -95,6 +95,7 @@
     return postPhotoElement;
   };
 
+// -------
 
   // var initPostPhotoArray = function () {
 
