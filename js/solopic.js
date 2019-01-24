@@ -7,49 +7,38 @@
 
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureClose = document.querySelector('.big-picture__cancel');
-
   var image = document.querySelector('.big-picture__img img');
   var pictureLikes = document.querySelector('.likes-count');
   var pictureDescription = document.querySelector('.social__caption');
-  var commentsList = bigPicture.querySelector('.social__comments');
-  var commentsCounter = document.querySelector('.social__comment-count');
   var pictureComments = document.querySelector('.social__comments');
   var commentsLoaderButton = document.querySelector('.social__comments-loader');
 
-
-  var pressEscButtonHandler = null;
+  var pressEscHandler = null;
   var renderedCommentsCount = 0;
-  var displayedPhotoData = null;
-
-  var setEscHandler = function (handler) {
-    pressEscButtonHandler = handler(closePhoto);
-  }
 
   var closePhoto = function () {
     bigPicture.classList.add('hidden');
     renderedCommentsCount = 0;
 
     bigPictureClose.removeEventListener('click', picCloseBtn);
-    document.removeEventListener('keydown', pressEscButtonHandler);
-    // window.filters.activate();
-  }
+    document.removeEventListener('keydown', pressEscHandler);
+  };
 
   var picCloseBtn = function (event) {
     event.preventDefault();
     closePhoto();
-  }
+  };
 
 
-
-  var updateCommentsCount = function (totalComments, renderedComments) {
-    commentsCounter.innerHTML = '';
-    var rendered = document.createTextNode(renderedComments + ' из ');
-    var total = document.createElement('span');
-    total.textContent = totalComments;
-    total.classList.add('comments-count');
-    commentsCounter.appendChild(rendered);
-    commentsCounter.appendChild(total);
-  }
+  // var updateCommentsCount = function(totalComments, renderedComments) {
+  //   commentsCounter.innerHTML = '';
+  //   var rendered = document.createTextNode(renderedComments + ' из ');
+  //   var total = document.createElement('span');
+  //   total.textContent = totalComments;
+  //   total.classList.add('comments-count');
+  //   commentsCounter.appendChild(rendered);
+  //   commentsCounter.appendChild(total);
+  // };
 
   var createComment = function (count, comments) {
     var fragment = document.createDocumentFragment();
@@ -79,35 +68,23 @@
       renderedCommentsCount++;
     }
     pictureComments.appendChild(fragment);
-  }
-
+  };
 
   var openPhoto = function (photo) {
     image.src = photo.url;
     pictureLikes.textContent = photo.likes;
     pictureDescription.textContent = photo.description;
-    displayedPhotoData = photo;
     pictureComments.innerHTML = '';
-
     createComment(RENDER_COMMENTS_COUNT, photo.comments);
-
-    bigPictureClose.addEventListener('click', picCloseBtn);
-    document.addEventListener('keydown', pressEscButtonHandler);
-
-    bigPicture.classList.remove('hidden');
-    // window.filters.deactivate();
-  }
-
-
-  // delete default comentariji
-  // pictureComments.innerHTML = '';
-
-  var showBigPicture = function (bigPictureItem) {
-    bigPicture.classList.remove('hidden');
-    return bigPicture;
   };
 
-  // zakrytije fotochki bolshoj kotoraja
+  var showBigPicture = function (photo) {
+    return function () {
+      bigPicture.classList.remove('hidden');
+      openPhoto(photo);
+    };
+  };
+
   var closingBigPicture = function () {
     bigPicture.classList.add('hidden');
   };
@@ -122,6 +99,4 @@
     bigPicture: bigPicture,
     showBigPicture: showBigPicture
   };
-
-
 })();

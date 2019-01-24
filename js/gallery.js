@@ -92,26 +92,15 @@
     postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
     postPhotoElement.querySelector('.picture__comments').textContent = photo.comments.length;
 
-    postPhotoElement.addEventListener('click', window.solopic.showBigPicture);
+    // bylo
+    // postPhotoElement.addEventListener('click', window.solopic.showBigPicture);
+
+    // stalo
+    postPhotoElement.addEventListener('click', window.solopic.showBigPicture(photo));
 
     return postPhotoElement;
   };
 
-  // -------
-
-  // var initPostPhotoArray = function () {
-
-  //   var makePosts = makePostsArray();
-  //   var fragment = document.createDocumentFragment();
-  //   for (var i = 0; i < CONST_POSTS; i++) {
-  //     fragment.appendChild(assemblingPostPhoto(makePosts[i]));
-  //   }
-  //   putInSection.appendChild(fragment);
-  // };
-
-  // initPostPhotoArray();
-
-  // --------------
 
   window.backend.load(function (photo) {
     var fragment = document.createDocumentFragment();
@@ -122,9 +111,4 @@
     putInSection.appendChild(fragment);
 
   });
-
-  // ---------------
-
-
-// window.solopic.showBigPicture();
 })();
