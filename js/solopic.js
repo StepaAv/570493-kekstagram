@@ -16,6 +16,17 @@
   var pressEscHandler = null;
   var renderedCommentsCount = 0;
 
+  var textDesc = document.querySelector('.text__description');
+  var inputHashTags = document.querySelector('.text__hashtags');
+  var uploadForm = document.querySelector('#upload-select-image');
+
+
+  var closingPhotoWindow = function () {
+    uploadForm.reset();
+    document.querySelector('.img-upload__overlay').classList.add('hidden');
+    uploadFile.removeEventListener('change', closingPhotoWindow);
+  };
+
   var closePhoto = function () {
     bigPicture.classList.add('hidden');
     renderedCommentsCount = 0;
@@ -85,8 +96,12 @@
       closingBigPicture();
     }
   });
+
   window.solopic = {
     bigPicture: bigPicture,
-    showBigPicture: showBigPicture
+    showBigPicture: showBigPicture,
+    textDesc: textDesc,
+    inputHashTags: inputHashTags,
+    closingPhotoWindow: closingPhotoWindow,
   };
 })();
