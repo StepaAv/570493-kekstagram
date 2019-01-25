@@ -30,16 +30,6 @@
   };
 
 
-  // var updateCommentsCount = function(totalComments, renderedComments) {
-  //   commentsCounter.innerHTML = '';
-  //   var rendered = document.createTextNode(renderedComments + ' из ');
-  //   var total = document.createElement('span');
-  //   total.textContent = totalComments;
-  //   total.classList.add('comments-count');
-  //   commentsCounter.appendChild(rendered);
-  //   commentsCounter.appendChild(total);
-  // };
-
   var createComment = function (count, comments) {
     var fragment = document.createDocumentFragment();
     count += renderedCommentsCount;

@@ -1,14 +1,12 @@
 'use strict';
 
-(function () {
-
-
+(function() {
   var putInSection = document.querySelector('.pictures');
   var templateSection = document.querySelector('#picture').content.querySelector('.picture');
-  var renderedPhotos = [];
+  var templateError = document.querySelector('#error').content.querySelector('.error');
+  var loadedPhotos = [];
 
-
-  var assemblingPostPhoto = function (photo) {
+  var createPhoto = function(photo) {
     var postPhotoElement = templateSection.cloneNode(true);
     postPhotoElement.querySelector('.picture__img').src = photo.url;
     postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
@@ -18,28 +16,44 @@
     return postPhotoElement;
   };
 
+  var clearPhotos = function() {
+    var renderedPhotos = putInSection.querySelectorAll('a.picture');
+    renderedPhotos.forEach(function(pic) {
+      putInSection.removeChild(pic);
+    });
+  };
 
-  window.backend.load(function (photo) {
+  var renderPhotos = function(photos) {
+    clearPhotos();
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photo.length; i++) {
-      fragment.appendChild(assemblingPostPhoto(photo[i]));
-    }
+    photos.forEach(function(photo) {
+      var onePhoto = createPhoto(photo);
+      onePhoto.addEventListener('click', function(evt) {
+        evt.preventDefault();
+        window.bigPicture.show(photo);
+      });
+      fragment.appendChild(onePhoto);
+    });
     putInSection.appendChild(fragment);
-  });
+  };
 
-  // function renderPhotos(photo) {
-  //   var fragment = document.createDocumentFragment();
-  //   photo.forEach(function (item) {
-  //     var onePhoto = createPhoto(item);
-  //     onePhoto.addEventListener('click', function (evt) {
-  //       evt.preventDefault();
-  //       window.bigPicture.show(item);
-  //     });
-  //     renderedPhotos.push(onePhoto);
-  //     fragment.appendChild(onePhoto);
-  //   });
-  //   putInSection.appendChild(fragment);
-  // }
+  var onSuccesLoad = function(photos) {
+    loadedPhotos = photos.slice(0);
+    renderPhotos(photos);
+  };
 
 
+  var onErrorLoad = function(err) {
+  // tut vse budet
+  };
+
+  window.backend.load(onSuccesLoad, onErrorLoad);
+
+
+  window.gallery = {
+    renderPhotos: renderPhotos,
+    getLoadedPhotos: function() {
+      return loadedPhotos;
+    },
+  };
 })();
