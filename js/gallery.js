@@ -1,12 +1,12 @@
 'use strict';
 
-(function() {
+(function () {
   var putInSection = document.querySelector('.pictures');
   var templateSection = document.querySelector('#picture').content.querySelector('.picture');
-  var templateError = document.querySelector('#error').content.querySelector('.error');
+  // var templateError = document.querySelector('#error').content.querySelector('.error');
   var loadedPhotos = [];
 
-  var createPhoto = function(photo) {
+  var createPhoto = function (photo) {
     var postPhotoElement = templateSection.cloneNode(true);
     postPhotoElement.querySelector('.picture__img').src = photo.url;
     postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
@@ -16,19 +16,19 @@
     return postPhotoElement;
   };
 
-  var clearPhotos = function() {
+  var clearPhotos = function () {
     var renderedPhotos = putInSection.querySelectorAll('a.picture');
-    renderedPhotos.forEach(function(pic) {
+    renderedPhotos.forEach(function (pic) {
       putInSection.removeChild(pic);
     });
   };
 
-  var renderPhotos = function(photos) {
+  var renderPhotos = function (photos) {
     clearPhotos();
     var fragment = document.createDocumentFragment();
-    photos.forEach(function(photo) {
+    photos.forEach(function (photo) {
       var onePhoto = createPhoto(photo);
-      onePhoto.addEventListener('click', function(evt) {
+      onePhoto.addEventListener('click', function (evt) {
         evt.preventDefault();
         window.bigPicture.show(photo);
       });
@@ -37,14 +37,13 @@
     putInSection.appendChild(fragment);
   };
 
-  var onSuccesLoad = function(photos) {
+  var onSuccesLoad = function (photos) {
     loadedPhotos = photos.slice(0);
     renderPhotos(photos);
   };
 
 
-  var onErrorLoad = function(err) {
-  // tut vse budet
+  var onErrorLoad = function () {
   };
 
   window.backend.load(onSuccesLoad, onErrorLoad);
@@ -52,7 +51,7 @@
 
   window.gallery = {
     renderPhotos: renderPhotos,
-    getLoadedPhotos: function() {
+    getLoadedPhotos: function () {
       return loadedPhotos;
     },
   };

@@ -1,5 +1,5 @@
 'use strict';
-(function() {
+(function () {
   var PHOTO_INDEX_MIN = 0;
   var PHOTO_INDEX_MAX = 10;
 
@@ -12,30 +12,31 @@
   var filterDiscussed = document.getElementById('filter-discussed');
 
 
-  var showingFilters = (function() {
+  var showingFilters = (function () {
     filtersBlock.classList.remove('img-filters--inactive');
-  })();
+  });
+  showingFilters();
 
-  var toggleActiveCalss = function(btn) {
-    imgFiltersButton.forEach(function(button) {
+  var toggleActiveCalss = function (btn) {
+    imgFiltersButton.forEach(function (button) {
       button.classList.remove('img-filters__button--active');
     });
     btn.classList.add('img-filters__button--active');
   };
 
-  var getRandomNumber = function(min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-  };
+  // var getRandomNumber = function (min, max) {
+  //   return Math.floor(min + Math.random() * (max + 1 - min));
+  // };
 
-  var sortDefaultPhotos = function(e) {
-    console.log('you clicked filter default');
+  var sortDefaultPhotos = function (e) {
+    // console.log('you clicked filter default');
     toggleActiveCalss(e.target);
     var filteredPhotos = window.gallery.getLoadedPhotos().slice(0);
     window.gallery.renderPhotos(filteredPhotos);
   };
 
-  var sortNewPhotos = function(e) {
-    console.log('you clicked filter new');
+  var sortNewPhotos = function (e) {
+    // console.log('you clicked filter new');
     toggleActiveCalss(e.target);
     var assembledPhotosArray = window.gallery.getLoadedPhotos().slice(0);
     var filteredPhotos = window.util.shuffle(assembledPhotosArray).slice(PHOTO_INDEX_MIN, PHOTO_INDEX_MAX);
@@ -43,12 +44,12 @@
   };
 
   function sortDiscussedPhotos(e) {
-    console.log('you clicked filter hot');
+    // console.log('you clicked filter hot');
     toggleActiveCalss(e.target);
     var filteredPhotos = window.gallery
       .getLoadedPhotos()
       .slice(0)
-      .sort(function(firstPhoto, secondPhoto) {
+      .sort(function (firstPhoto, secondPhoto) {
         return secondPhoto.comments.length - firstPhoto.comments.length;
       });
     window.gallery.renderPhotos(filteredPhotos);
