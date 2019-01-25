@@ -36,6 +36,7 @@
     validations(elementsHashTags);
   });
 
+  /*
   window.solopic.textDescription.addEventListener('change', function (evt) {
     var lengthDesc = evt.target.value.length;
     if (lengthDesc > 0 && lengthDesc < 2) {
@@ -44,5 +45,6 @@
       window.solopic.textDescription.setCustomValidity('');
     }
   });
+  */
 
 })();

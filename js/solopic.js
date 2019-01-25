@@ -80,10 +80,8 @@
   };
 
   var showBigPicture = function (photo) {
-    return function () {
-      bigPicture.classList.remove('hidden');
-      openPhoto(photo);
-    };
+    bigPicture.classList.remove('hidden');
+    openPhoto(photo);
   };
 
   var closingBigPicture = function () {

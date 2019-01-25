@@ -11,8 +11,10 @@
     postPhotoElement.querySelector('.picture__img').src = photo.url;
     postPhotoElement.querySelector('.picture__likes').textContent = photo.likes;
     postPhotoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    postPhotoElement.addEventListener('click', window.solopic.showBigPicture(photo));
-
+    postPhotoElement.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      window.solopic.showBigPicture(photo);
+    });
     return postPhotoElement;
   };
 
@@ -28,10 +30,6 @@
     var fragment = document.createDocumentFragment();
     photos.forEach(function (photo) {
       var onePhoto = createPhoto(photo);
-      onePhoto.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        window.bigPicture.show(photo);
-      });
       fragment.appendChild(onePhoto);
     });
     putInSection.appendChild(fragment);
@@ -42,12 +40,9 @@
     renderPhotos(photos);
   };
 
-
-  var onErrorLoad = function () {
-  };
+  var onErrorLoad = function () {};
 
   window.backend.load(onSuccesLoad, onErrorLoad);
-
 
   window.gallery = {
     renderPhotos: renderPhotos,

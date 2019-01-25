@@ -1,19 +1,18 @@
 'use strict';
 
 (function () {
-
   var COEF_CHROME = 100;
   var COEF_SEPIA = 100;
   var COEF_MARVIN = '%';
   var COEF_PHOBOS = 33.3;
   var COEF_HEAT = 33.3;
 
-
   var uploadInput = document.querySelector('#upload-file');
   var uploadPhotoClose = document.getElementById('upload-cancel');
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
   var textAreaInput = document.querySelector('.text__description');
-
+  var submitButton = document.querySelector('.img-upload__submit');
+  var uploadForms = document.querySelector('.img-upload__form');
 
   var mainImage = document.querySelector('.img-upload__preview > img');
   var filterNone = document.getElementById('effect-none');
@@ -31,13 +30,16 @@
 
   var currentFilter;
 
+  submitButton.addEventListener('click', function () {
+    // preventDefault();
+    window.backend.save();
+  });
 
   var onUploadInputChange = function () {
-    openUpload();
+    openUpload(new FormData(uploadForms), function () {}, function () {});
   };
 
   uploadInput.addEventListener('change', onUploadInputChange);
-
 
   var openUpload = function () {
     uploadPhotoForm.classList.remove('hidden');
@@ -54,23 +56,19 @@
     closeUpload();
   });
 
-
   var onPopupEscPress = function (evt) {
-
     if (window.util.isEscKeycode(evt)) {
       closeUpload();
     }
   };
 
   uploadPhotoClose.addEventListener('keydown', function (evt) {
-
     if (window.util.isEscKeycode(evt)) {
       closeUpload();
     }
   });
 
   textAreaInput.addEventListener('keydown', function (evt) {
-
     evt.stopPropagation();
   });
 
@@ -87,7 +85,6 @@
   var IMG_MIN_SCALE = 25;
   var imgScale = 100;
 
-
   var plusImgScale = function () {
     var scale = imgScale + IMG_SCALE_STEP;
     if (scale > IMG_MAX_SCALE) {
@@ -100,7 +97,6 @@
   };
 
   zoomPhotoPlus.addEventListener('click', plusImgScale);
-
 
   var minusImgScale = function () {
     var scale = imgScale - IMG_SCALE_STEP;
@@ -128,7 +124,6 @@
     mainImage.style.filter = '';
     removingEffectBar();
   };
-
 
   var removingEffectBar = function () {
     effectBar.classList.add('hidden');
@@ -202,7 +197,6 @@
       setCurrentFilterValue(num);
     };
 
-
     var onMouseUp = function () {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -245,6 +239,4 @@
   filterPhobos.addEventListener('click', addingStylePhobos);
   filterHeat.addEventListener('click', addingStyleHeat);
   filterNone.addEventListener('click', addingStyleNone);
-
-
 })();
