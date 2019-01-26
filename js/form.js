@@ -11,6 +11,7 @@
   var uploadPhotoClose = document.getElementById('upload-cancel');
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
   var textAreaInput = document.querySelector('.text__description');
+  var hashTagsInput = document.querySelector('.text__hashtags')
   var submitButton = document.querySelector('.img-upload__submit');
   var uploadForms = document.querySelector('.img-upload__form');
 
@@ -27,6 +28,15 @@
   var effectLevelHandle = document.querySelector('.effect-level__pin');
   var effectLevelLine = document.querySelector('.effect-level__line');
   var effectLevelDepth = document.querySelector('.effect-level__depth');
+
+  var successTemplate = document.querySelector('#success').content;
+  var main = document.querySelector('main');
+  var imgUploadWrapper = document.querySelector('.img-upload__wrapper');
+  var form = imgUploadWrapper.querySelector('.img-upload__form');
+  var errorTemplate = document.querySelector('#error').content;
+  var successTemplate = document.querySelector('#success').content;
+
+
 
   var currentFilter;
 
@@ -69,6 +79,10 @@
   });
 
   textAreaInput.addEventListener('keydown', function (evt) {
+    evt.stopPropagation();
+  });
+
+    hashTagsInput.addEventListener('keydown', function (evt) {
     evt.stopPropagation();
   });
 
@@ -239,4 +253,53 @@
   filterPhobos.addEventListener('click', addingStylePhobos);
   filterHeat.addEventListener('click', addingStyleHeat);
   filterNone.addEventListener('click', addingStyleNone);
+
+// tuta prodolzajem
+  var closingModalWithEsc = function (evt) {
+    if (window.util.isEscKeycode(evt)) {
+      closeModalWindow();
+    }
+  };
+
+  var closeModalWindow = function () {
+    var okSection = document.querySelector('.success');
+    var notOkSection = document.querySelector('.error');
+    if (main.contains(okSection)) {
+      main.removeChild(okSection);
+      main.removeEventListener('click', anuBtnClickHandler);
+      document.removeEventListener('keydown', closeUpload);
+    } else if (main.contains(notOkSection)) {
+      main.removeChild(notOkSection);
+      main.removeEventListener('click', anuBtnClickHandler);
+      document.removeEventListener('keydown', closingModalWithEsc);
+    }
+  };
+    var successingSaveForm = function () {
+      // console.log('its ok');
+    closeUpload();
+    var successMarkup = successTemplate.cloneNode(true);
+    main.appendChild(successMarkup);
+  };
+
+  var errorSaveForm = function () {
+    // console.log( 'its bad')
+    closeUpload();
+    var errorMarkup = errorTemplate.cloneNode(true);
+    main.appendChild(errorMarkup);
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), successingSaveForm, errorSaveForm);
+    evt.preventDefault();
+    main.addEventListener('click', anuBtnClickHandler);
+    document.addEventListener('keydown', closingModalWithEsc);
+  });
+
+    var anuBtnClickHandler = function (evt) {
+    var target = evt.target;
+    if (target.className === 'success__button' || target.className === 'success' || target.className === 'error__button' || target.className === 'error') {
+      closeModalWindow();
+    }
+  };
+
 })();

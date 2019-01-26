@@ -1,43 +1,38 @@
 'use strict';
 (function () {
-  var save = function (data, onSuccess, onError) {
-    var url = 'https://js.dump.academy/kekstagram';
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'multipart/form-data';
+  var SUCCESS_CODE = 200;
+  var URL_SAVE = 'https://js.dump.academy/kekstagram';
+  var URL_LOAD = 'https://js.dump.academy/kekstagram/data';
 
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onSuccess(xhr.response);
-      } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
-      }
-    });
 
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
 
-    xhr.timeout = 8500;
-
-    xhr.open('POST', url);
-    xhr.send();
-  };
-
-  var load = function (onSuccess, onError) {
-    var url = 'https://js.dump.academy/kekstagram/data';
+  var getRequestPreparation = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_CODE) {
         onSuccess(xhr.response);
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
+    return xhr;
+  };
+
+  var save = function (data, onSuccess, onError) {
+    var xhr = getRequestPreparation(onSuccess, onError);
+
+    xhr.addEventListener('error', function () {
+      onError('Ошибка ' + xhr.status + ' ' + xhr.statusText);
+    });
+
+    xhr.open('POST', URL_SAVE);
+    xhr.send(data);
+  };
+
+  var load = function (onSuccess, onError) {
+    var xhr = getRequestPreparation(onSuccess, onError);
 
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
@@ -48,12 +43,12 @@
 
     xhr.timeout = 8500;
 
-    xhr.open('GET', url);
+    xhr.open('GET', URL_LOAD);
     xhr.send();
   };
 
   window.backend = {
-    load: load,
     save: save,
+    load: load
   };
 })();
