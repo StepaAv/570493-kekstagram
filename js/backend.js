@@ -12,6 +12,7 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === SUCCESS_CODE) {
         onSuccess(xhr.response);
+        window.filters.showingFilters();
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
