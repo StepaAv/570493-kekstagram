@@ -51,15 +51,15 @@
       });
     window.gallery.renderPhotos(filteredPhotos);
   }
-//-----------------
+  // -----------------
 
-var debouncePopularPhotos = window.debounce(sortDefaultPhotos);
+  var debouncePopularPhotos = window.debounce(sortDefaultPhotos);
 
   var debounceDiscussedPhotos = window.debounce(sortDiscussedPhotos);
 
   var debounceNewPhotos = window.debounce(sortNewPhotos);
 
-//------------------
+  // ------------------
   filterPopular.addEventListener('click', debouncePopularPhotos);
   filterNew.addEventListener('click', debounceNewPhotos);
   filterDiscussed.addEventListener('click', debounceDiscussedPhotos);
@@ -67,5 +67,5 @@ var debouncePopularPhotos = window.debounce(sortDefaultPhotos);
 
   window.filters = {
     showingFilters: showingFilters
-      };
+  };
 })();

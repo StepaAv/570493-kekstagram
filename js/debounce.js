@@ -1,3 +1,5 @@
+'use strict';
+
 (function () {
   var DEBOUNCE_TIME = 501;
 

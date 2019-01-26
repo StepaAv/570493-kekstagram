@@ -11,7 +11,7 @@
   var uploadPhotoClose = document.getElementById('upload-cancel');
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
   var textAreaInput = document.querySelector('.text__description');
-  var hashTagsInput = document.querySelector('.text__hashtags')
+  var hashTagsInput = document.querySelector('.text__hashtags');
   var submitButton = document.querySelector('.img-upload__submit');
   var uploadForms = document.querySelector('.img-upload__form');
 
@@ -29,13 +29,11 @@
   var effectLevelLine = document.querySelector('.effect-level__line');
   var effectLevelDepth = document.querySelector('.effect-level__depth');
 
-  var successTemplate = document.querySelector('#success').content;
   var main = document.querySelector('main');
   var imgUploadWrapper = document.querySelector('.img-upload__wrapper');
   var form = imgUploadWrapper.querySelector('.img-upload__form');
   var errorTemplate = document.querySelector('#error').content;
   var successTemplate = document.querySelector('#success').content;
-
 
 
   var currentFilter;
@@ -82,7 +80,7 @@
     evt.stopPropagation();
   });
 
-    hashTagsInput.addEventListener('keydown', function (evt) {
+  hashTagsInput.addEventListener('keydown', function (evt) {
     evt.stopPropagation();
   });
 
@@ -254,7 +252,7 @@
   filterHeat.addEventListener('click', addingStyleHeat);
   filterNone.addEventListener('click', addingStyleNone);
 
-// tuta prodolzajem
+  // tuta prodolzajem
   var closingModalWithEsc = function (evt) {
     if (window.util.isEscKeycode(evt)) {
       closeModalWindow();
@@ -274,8 +272,8 @@
       document.removeEventListener('keydown', closingModalWithEsc);
     }
   };
-    var successingSaveForm = function () {
-      // console.log('its ok');
+  var successingSaveForm = function () {
+    // console.log('its ok');
     closeUpload();
     var successMarkup = successTemplate.cloneNode(true);
     main.appendChild(successMarkup);
@@ -295,7 +293,7 @@
     document.addEventListener('keydown', closingModalWithEsc);
   });
 
-    var anuBtnClickHandler = function (evt) {
+  var anuBtnClickHandler = function (evt) {
     var target = evt.target;
     if (target.className === 'success__button' || target.className === 'success' || target.className === 'error__button' || target.className === 'error') {
       closeModalWindow();

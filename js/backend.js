@@ -5,7 +5,6 @@
   var URL_LOAD = 'https://js.dump.academy/kekstagram/data';
 
 
-
   var getRequestPreparation = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
