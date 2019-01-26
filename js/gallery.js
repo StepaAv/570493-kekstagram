@@ -3,7 +3,6 @@
 (function () {
   var putInSection = document.querySelector('.pictures');
   var templateSection = document.querySelector('#picture').content.querySelector('.picture');
-  // var templateError = document.querySelector('#error').content.querySelector('.error');
   var loadedPhotos = [];
 
   var createPhoto = function (photo) {

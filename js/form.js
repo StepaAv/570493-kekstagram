@@ -39,7 +39,6 @@
   var currentFilter;
 
   submitButton.addEventListener('click', function () {
-    // preventDefault();
     window.backend.save();
   });
 
@@ -123,8 +122,6 @@
 
   zoomPhotoMinus.addEventListener('click', minusImgScale);
 
-  // dobavlenije filtrov pri klike
-
   var addingStyleNone = function () {
     mainImage.classList.remove(
         'effects__preview--chrome',
@@ -170,9 +167,6 @@
     setFilter('sepia(1)', 'effects__preview--sepia');
   };
 
-  // dvizhenije polzunka slaidera
-  // tuta vse sdelano
-  // form.js
   effectLevelHandle.addEventListener('mousedown', function (evt) {
     var maxWidth = effectLevelLine.offsetWidth;
 
@@ -244,7 +238,6 @@
     }
   };
 
-  // priminenije filtrov po klik u
   filterChrome.addEventListener('click', addingStyleChrome);
   filterSepia.addEventListener('click', addingStyleSepia);
   filterMarvin.addEventListener('click', addingStyleMarvin);
@@ -252,7 +245,6 @@
   filterHeat.addEventListener('click', addingStyleHeat);
   filterNone.addEventListener('click', addingStyleNone);
 
-  // tuta prodolzajem
   var closingModalWithEsc = function (evt) {
     if (window.util.isEscKeycode(evt)) {
       closeModalWindow();
@@ -273,14 +265,12 @@
     }
   };
   var successingSaveForm = function () {
-    // console.log('its ok');
     closeUpload();
     var successMarkup = successTemplate.cloneNode(true);
     main.appendChild(successMarkup);
   };
 
   var errorSaveForm = function () {
-    // console.log( 'its bad')
     closeUpload();
     var errorMarkup = errorTemplate.cloneNode(true);
     main.appendChild(errorMarkup);

@@ -24,7 +24,6 @@
   var closingPhotoWindow = function () {
     uploadForm.reset();
     document.querySelector('.img-upload__overlay').classList.add('hidden');
-    // uploadFile.removeEventListener('change', closingPhotoWindow);
   };
 
   var closePhoto = function () {
