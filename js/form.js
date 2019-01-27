@@ -7,6 +7,11 @@
   var COEF_PHOBOS = 33.3;
   var COEF_HEAT = 33.3;
 
+  var IMG_SCALE_STEP = 25;
+  var IMG_MAX_SCALE = 100;
+  var IMG_MIN_SCALE = 25;
+  var imgScale = 100;
+
   var uploadInput = document.querySelector('#upload-file');
   var uploadPhotoClose = document.getElementById('upload-cancel');
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
@@ -91,10 +96,6 @@
   imageScale.style.transform = 'scale(1)';
   zoomPhotoValue.value = '100%';
 
-  var IMG_SCALE_STEP = 25;
-  var IMG_MAX_SCALE = 100;
-  var IMG_MIN_SCALE = 25;
-  var imgScale = 100;
 
   var plusImgScale = function () {
     var scale = imgScale + IMG_SCALE_STEP;
@@ -193,7 +194,6 @@
       effectLevelHandle.style.left = offset + 'px';
       effectLevelDepth.style.width = offset + 'px';
 
-      // procentnoje sootnozhenije polozhenija polzunka
       var calculatingEffectValue = function () {
         var percentage = (offset * 100) / maxWidth;
         var newLevelValue = Math.round(percentage);
