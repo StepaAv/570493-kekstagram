@@ -32,6 +32,8 @@
       fragment.appendChild(onePhoto);
     });
     putInSection.appendChild(fragment);
+    window.filters.showingFilters();
+
   };
 
   var onSuccesLoad = function (photos) {
