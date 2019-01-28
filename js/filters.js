@@ -9,11 +9,9 @@
   var filterNew = document.getElementById('filter-new');
   var filterDiscussed = document.getElementById('filter-discussed');
 
-
-  var showingFilters = (function () {
+  var showingFilters = function () {
     filtersBlock.classList.remove('img-filters--inactive');
-  });
-
+  };
 
   var toggleActiveCalss = function (btn) {
     imgFiltersButton.forEach(function (button) {
@@ -21,7 +19,6 @@
     });
     btn.classList.add('img-filters__button--active');
   };
-
 
   var sortDefaultPhotos = function (e) {
     toggleActiveCalss(e.target);
@@ -32,7 +29,9 @@
   var sortNewPhotos = function (e) {
     toggleActiveCalss(e.target);
     var assembledPhotosArray = window.gallery.getLoadedPhotos().slice(0);
-    var filteredPhotos = window.util.shuffle(assembledPhotosArray).slice(PHOTO_INDEX_MIN, PHOTO_INDEX_MAX);
+    var filteredPhotos = window.util
+      .shuffle(assembledPhotosArray)
+      .slice(PHOTO_INDEX_MIN, PHOTO_INDEX_MAX);
     window.gallery.renderPhotos(filteredPhotos);
   };
 
@@ -47,16 +46,11 @@
     window.gallery.renderPhotos(filteredPhotos);
   }
 
-  var debouncePopularPhotos = window.debounce(sortDefaultPhotos);
-  var debounceDiscussedPhotos = window.debounce(sortDiscussedPhotos);
-  var debounceNewPhotos = window.debounce(sortNewPhotos);
-
-  filterPopular.addEventListener('click', debouncePopularPhotos);
-  filterNew.addEventListener('click', debounceNewPhotos);
-  filterDiscussed.addEventListener('click', debounceDiscussedPhotos);
-
+  filterPopular.addEventListener('click', window.debounce(sortDefaultPhotos));
+  filterNew.addEventListener('click', window.debounce(sortNewPhotos));
+  filterDiscussed.addEventListener('click', window.debounce(sortDiscussedPhotos));
 
   window.filters = {
-    showingFilters: showingFilters
+    showingFilters: showingFilters,
   };
 })();

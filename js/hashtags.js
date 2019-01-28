@@ -1,39 +1,111 @@
 'use strict';
-(function () {
-  var MAX_TAGS_COUNT = 5;
-  var MAX_TAGS_LENGTH = 20;
 
-  var validations = function (arr) {
-    arr.forEach(function (elem) {
-      var hashLength = elem.length;
-      var firstLetter = elem[0];
-      var errorDialog = '';
-      if (elem.indexOf('#', 2) !== -1) {
-        errorDialog = 'У хэштегов должны быть пробелы!';
-      } else if (hashLength === 1) {
-        errorDialog = 'У хэштега должно быть хотябы 2 символа';
-      } else if (firstLetter !== '#') {
-        errorDialog = 'Зпбыл(а)(и) знак "#" в начале тега';
-      } else if (arr.length > 1) {
-        for (var i = 0; i < arr.length; i++) {
-          var hashtag = arr[i];
-          var hashtagPrevious = arr.slice(0, i);
-          if (hashtagPrevious.indexOf(hashtag) > -1) {
-            errorDialog = 'Дубликация тегов, не к добру';
-          }
-        }
-      } else if (hashLength > MAX_TAGS_LENGTH) {
-        errorDialog = 'Максимальная длина хэштега равна 20 кнопочкам на клавиатуре';
-      } else if (arr.length > MAX_TAGS_COUNT) {
-        errorDialog = 'Максимальное кол-во хэштегов ограничено разрабодчиком и равно 5';
-      }
-      window.solopic.inputHashTags.setCustomValidity(errorDialog);
-    });
+(function () {
+  var MAX_HASHTAGS_COUNT = 5;
+  var MAX_LENGTH_HASHTAGS = 20;
+
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
+
+  var HashtagsMessages = {
+    FIVE_TAGS: 'Не должно превышать 5',
+    LONELY_LATTICE: 'не должен состоять только из #',
+    SPACE_TAG: 'Хэш-теги разделяются пробелами',
+    NEW_TAG_LATTICE: 'должен начинаться с #',
+    LENGTH_TAG: 'не должно быть символов больше 20',
+    DOUBLE_TAG: 'не должны повторяться'
   };
 
-  window.solopic.inputHashTags.addEventListener('input', function (evt) {
-    var elementsHashTags = evt.target.value.trim().toLowerCase().split(' ');
-    validations(elementsHashTags);
-  });
+  var scaningForGemini = function (arr) {
+    var scaningForGeminiOutcome = '';
+    var flag = false;
+    for (var i = 0; i < arr.length; i++) {
+      if (flag) {
+        break;
+      }
+      for (var j = 0; j < arr.length; j++) {
+        if ((arr[i].toUpperCase() === arr[j].toUpperCase()) && (i !== j)) {
+          scaningForGeminiOutcome = HashtagsMessages.DOUBLE_TAG;
+          flag = true;
+          break;
+        }
+        scaningForGeminiOutcome = '';
+      }
+    }
+    return scaningForGeminiOutcome;
+  };
 
+
+  var scaningLonelyLattice = function (arr) {
+    var scaningLonelyLatticeOutcome = '';
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] === '#') {
+        scaningLonelyLatticeOutcome = HashtagsMessages.LONELY_LATTICE;
+        break;
+      }
+    }
+    return scaningLonelyLatticeOutcome;
+  };
+
+  var scaningForSpacebar = function (arr) {
+    var scaningForSpacebarOutcome = '';
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = 0; j < arr[i].length; j++) {
+        if ((arr[i][j] === '#') && (!(j === 0))) {
+          scaningForSpacebarOutcome = HashtagsMessages.SPACE_TAG;
+          break;
+        }
+      }
+    }
+    return scaningForSpacebarOutcome;
+  };
+
+  var scaningFiveHashtags = function (arr) {
+    if (arr.length > MAX_HASHTAGS_COUNT) {
+      return HashtagsMessages.FIVE_TAGS;
+    }
+    return '';
+  };
+
+  var scaningLatticeStart = function (arr) {
+    var scaningLatticeStartOutcome = '';
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i][0] !== '#') {
+        scaningLatticeStartOutcome = HashtagsMessages.NEW_TAG_LATTICE;
+        break;
+      }
+    }
+    return scaningLatticeStartOutcome;
+  };
+
+  var scaningForMaxHashtagsLettersLength = function (arr) {
+    var scaningForMaxHashtagsLettersLengthOutcome = '';
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].length > MAX_LENGTH_HASHTAGS) {
+        scaningForMaxHashtagsLettersLengthOutcome = HashtagsMessages.LENGTH_TAG;
+        break;
+      }
+    }
+    return scaningForMaxHashtagsLettersLengthOutcome;
+  };
+
+
+  var assemblingHashtagsArr = function (hashArray) {
+    var assembledHashtagsArray = [
+      scaningFiveHashtags(hashArray),
+      scaningLonelyLattice(hashArray),
+      scaningForSpacebar(hashArray),
+      scaningLatticeStart(hashArray),
+      scaningForMaxHashtagsLettersLength(hashArray),
+      scaningForGemini(hashArray)
+    ];
+    return assembledHashtagsArray;
+  };
+
+  var hashInputer = function () {
+    var arr = textHashtags.value.trim().split(' ');
+    textHashtags.setCustomValidity(assemblingHashtagsArr(arr).join(''));
+  };
+
+  textHashtags.addEventListener('change', hashInputer);
 })();
