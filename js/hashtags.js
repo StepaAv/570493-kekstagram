@@ -13,7 +13,11 @@
     SPACE_TAG: 'Хэш-теги разделяются пробелами',
     NEW_TAG_LATTICE: 'должен начинаться с #',
     LENGTH_TAG: 'не должно быть символов больше 20',
-    DOUBLE_TAG: 'не должны повторяться'
+    DOUBLE_TAG: 'не должны повторяться',
+  };
+
+  var coloringBorderOnError = function () {
+    textHashtags.style.border = '3px solid red';
   };
 
   var scaningForGemini = function (arr) {
@@ -21,10 +25,11 @@
     var flag = false;
     for (var i = 0; i < arr.length; i++) {
       if (flag) {
+        coloringBorderOnError();
         break;
       }
       for (var j = 0; j < arr.length; j++) {
-        if ((arr[i].toUpperCase() === arr[j].toUpperCase()) && (i !== j)) {
+        if (arr[i].toUpperCase() === arr[j].toUpperCase() && i !== j) {
           scaningForGeminiOutcome = HashtagsMessages.DOUBLE_TAG;
           flag = true;
           break;
@@ -35,12 +40,12 @@
     return scaningForGeminiOutcome;
   };
 
-
   var scaningLonelyLattice = function (arr) {
     var scaningLonelyLatticeOutcome = '';
     for (var i = 0; i < arr.length; i++) {
       if (arr[i] === '#') {
         scaningLonelyLatticeOutcome = HashtagsMessages.LONELY_LATTICE;
+        coloringBorderOnError();
         break;
       }
     }
@@ -51,8 +56,9 @@
     var scaningForSpacebarOutcome = '';
     for (var i = 0; i < arr.length; i++) {
       for (var j = 0; j < arr[i].length; j++) {
-        if ((arr[i][j] === '#') && (!(j === 0))) {
+        if (arr[i][j] === '#' && !(j === 0)) {
           scaningForSpacebarOutcome = HashtagsMessages.SPACE_TAG;
+          coloringBorderOnError();
           break;
         }
       }
@@ -62,6 +68,7 @@
 
   var scaningFiveHashtags = function (arr) {
     if (arr.length > MAX_HASHTAGS_COUNT) {
+      coloringBorderOnError();
       return HashtagsMessages.FIVE_TAGS;
     }
     return '';
@@ -72,6 +79,7 @@
     for (var i = 0; i < arr.length; i++) {
       if (arr[i][0] !== '#') {
         scaningLatticeStartOutcome = HashtagsMessages.NEW_TAG_LATTICE;
+        coloringBorderOnError();
         break;
       }
     }
@@ -83,12 +91,12 @@
     for (var i = 0; i < arr.length; i++) {
       if (arr[i].length > MAX_LENGTH_HASHTAGS) {
         scaningForMaxHashtagsLettersLengthOutcome = HashtagsMessages.LENGTH_TAG;
+        coloringBorderOnError();
         break;
       }
     }
     return scaningForMaxHashtagsLettersLengthOutcome;
   };
-
 
   var assemblingHashtagsArr = function (hashArray) {
     var assembledHashtagsArray = [
@@ -97,12 +105,13 @@
       scaningForSpacebar(hashArray),
       scaningLatticeStart(hashArray),
       scaningForMaxHashtagsLettersLength(hashArray),
-      scaningForGemini(hashArray)
+      scaningForGemini(hashArray),
     ];
     return assembledHashtagsArray;
   };
 
   var hashInputer = function () {
+    textHashtags.style.border = 'none';
     var arr = textHashtags.value.trim().split(' ');
     textHashtags.setCustomValidity(assemblingHashtagsArr(arr).join(''));
   };

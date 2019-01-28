@@ -17,7 +17,6 @@
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
   var textAreaInput = document.querySelector('.text__description');
   var hashTagsInput = document.querySelector('.text__hashtags');
-  var uploadForms = document.querySelector('.img-upload__form');
 
   var mainImage = document.querySelector('.img-upload__preview > img');
   var filterNone = document.getElementById('effect-none');
@@ -46,21 +45,28 @@
 
   var currentFilter;
 
-  var onUploadInputChange = function () {
-    openUpload(new FormData(uploadForms), function () {}, function () {});
+  var scaleRestoring = function () {
+    var i = 0;
+    do {
+      i += 1;
+      zoomPhotoPlus.click();
+    }
+    while (i < 5);
   };
 
-  uploadInput.addEventListener('change', onUploadInputChange);
 
   var openUpload = function () {
     uploadPhotoForm.classList.remove('hidden');
     addingStyleNone();
     document.addEventListener('keydown', onPopupEscPress);
   };
+  uploadInput.addEventListener('change', openUpload);
 
   var closeUpload = function () {
+    uploadInput.value = '';
     uploadPhotoForm.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    scaleRestoring();
   };
 
   uploadPhotoClose.addEventListener('click', function () {
@@ -249,8 +255,10 @@
     var notOkSection = document.querySelector('.error');
     if (main.contains(okSection)) {
       removeModalWindowListener(okSection, closeUpload);
+      scaleRestoring();
     } else if (main.contains(notOkSection)) {
       removeModalWindowListener(notOkSection, closingModalWithEsc);
+      scaleRestoring();
     }
   };
 
