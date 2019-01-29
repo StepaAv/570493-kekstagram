@@ -12,6 +12,7 @@
   var IMG_MIN_SCALE = 25;
   var imgScale = 100;
 
+  var effectLevel = document.querySelector('.effect-level__value');
   var uploadInput = document.querySelector('#upload-file');
   var uploadPhotoClose = document.getElementById('upload-cancel');
   var uploadPhotoForm = document.querySelector('.img-upload__overlay');
@@ -50,10 +51,8 @@
     do {
       i += 1;
       zoomPhotoPlus.click();
-    }
-    while (i < 5);
+    } while (i < 5);
   };
-
 
   var openUpload = function () {
     uploadPhotoForm.classList.remove('hidden');
@@ -212,6 +211,7 @@
   });
 
   var setCurrentFilterValue = function (num) {
+    effectLevel.value = num;
     currentFilter = effectList.querySelector('input[type=radio]:checked');
 
     switch (currentFilter.value) {
@@ -251,6 +251,10 @@
   };
 
   var closeModalWindow = function () {
+    hashTagsInput.value = '';
+    textAreaInput.value = '';
+    effectLevel.value = 100;
+    hashTagsInput.style.border = 'none';
     var okSection = document.querySelector('.success');
     var notOkSection = document.querySelector('.error');
     if (main.contains(okSection)) {
