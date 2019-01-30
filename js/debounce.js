@@ -3,8 +3,8 @@
 (function () {
   var DEBOUNCE_TIME = 501;
 
+  var lastTimeout = null;
   window.debounce = function (cb) {
-    var lastTimeout = null;
 
     return function () {
       var parameters = arguments;

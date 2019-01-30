@@ -8,12 +8,12 @@
       return evt.keyCode === ESC_KEYCODE;
     },
     shuffle: function (array) {
-      var m = array.length;
-      while (m) {
-        var i = Math.floor(Math.random() * m--);
-        var t = array[m];
-        array[m] = array[i];
-        array[i] = t;
+      var length = array.length;
+      while (length) {
+        var i = Math.floor(Math.random() * length--);
+        var temp = array[length];
+        array[length] = array[i];
+        array[i] = temp;
       }
       return array;
     },

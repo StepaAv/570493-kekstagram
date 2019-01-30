@@ -21,49 +21,33 @@
   };
 
   var scaningForGemini = function (arr) {
-    var scaningForGeminiOutcome = '';
-    var flag = false;
-    for (var i = 0; i < arr.length; i++) {
-      if (flag) {
-        coloringBorderOnError();
-        break;
-      }
-      for (var j = 0; j < arr.length; j++) {
-        if (arr[i].toUpperCase() === arr[j].toUpperCase() && i !== j) {
-          scaningForGeminiOutcome = HashtagsMessages.DOUBLE_TAG;
-          flag = true;
-          break;
-        }
-        scaningForGeminiOutcome = '';
-      }
+    var geminiResult = arr
+      .map(function (el) {
+        return el.toUpperCase();
+      })
+      .some(function (el, i, array) {
+        return array.indexOf(el) !== i;
+      });
+
+    if (geminiResult) {
+      coloringBorderOnError();
+      return HashtagsMessages.DOUBLE_TAG;
     }
-    return scaningForGeminiOutcome;
+
+    return '';
   };
 
   var scaningLonelyLattice = function (arr) {
-    var scaningLonelyLatticeOutcome = '';
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] === '#') {
-        scaningLonelyLatticeOutcome = HashtagsMessages.LONELY_LATTICE;
-        coloringBorderOnError();
-        break;
-      }
-    }
-    return scaningLonelyLatticeOutcome;
-  };
+    var lonelyLattice = arr.some(function (el) {
+      return el === '#';
+    });
 
-  var scaningForSpacebar = function (arr) {
-    var scaningForSpacebarOutcome = '';
-    for (var i = 0; i < arr.length; i++) {
-      for (var j = 0; j < arr[i].length; j++) {
-        if (arr[i][j] === '#' && !(j === 0)) {
-          scaningForSpacebarOutcome = HashtagsMessages.SPACE_TAG;
-          coloringBorderOnError();
-          break;
-        }
-      }
+    if (lonelyLattice) {
+      coloringBorderOnError();
+      return HashtagsMessages.LONELY_LATTICE;
     }
-    return scaningForSpacebarOutcome;
+
+    return '';
   };
 
   var scaningFiveHashtags = function (arr) {
@@ -75,34 +59,34 @@
   };
 
   var scaningLatticeStart = function (arr) {
-    var scaningLatticeStartOutcome = '';
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i][0] !== '#') {
-        scaningLatticeStartOutcome = HashtagsMessages.NEW_TAG_LATTICE;
-        coloringBorderOnError();
-        break;
-      }
+    var latticeStart = arr.some(function (tag) {
+      return tag[0] !== '#';
+    });
+
+    if (latticeStart) {
+      coloringBorderOnError();
+      return HashtagsMessages.NEW_TAG_LATTICE;
     }
-    return scaningLatticeStartOutcome;
+
+    return '';
   };
 
   var scaningForMaxHashtagsLettersLength = function (arr) {
-    var scaningForMaxHashtagsLettersLengthOutcome = '';
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].length > MAX_LENGTH_HASHTAGS) {
-        scaningForMaxHashtagsLettersLengthOutcome = HashtagsMessages.LENGTH_TAG;
-        coloringBorderOnError();
-        break;
-      }
+    var maxHashtagsLettersLength = arr.some(function (el) {
+      return el.length > MAX_LENGTH_HASHTAGS;
+    });
+    if (maxHashtagsLettersLength) {
+      coloringBorderOnError();
+      return HashtagsMessages.LENGTH_TAG;
     }
-    return scaningForMaxHashtagsLettersLengthOutcome;
+
+    return '';
   };
 
   var assemblingHashtagsArr = function (hashArray) {
     var assembledHashtagsArray = [
       scaningFiveHashtags(hashArray),
       scaningLonelyLattice(hashArray),
-      scaningForSpacebar(hashArray),
       scaningLatticeStart(hashArray),
       scaningForMaxHashtagsLettersLength(hashArray),
       scaningForGemini(hashArray),
@@ -110,11 +94,16 @@
     return assembledHashtagsArray;
   };
 
-  var hashInputer = function () {
+  var onChangeHashInputer = function () {
     textHashtags.style.border = 'none';
-    var arr = textHashtags.value.trim().split(' ');
+    var arr = textHashtags.value
+      .trim()
+      .split(' ')
+      .filter(function (el) {
+        return el !== '';
+      });
     textHashtags.setCustomValidity(assemblingHashtagsArr(arr).join(''));
   };
 
-  textHashtags.addEventListener('change', hashInputer);
+  textHashtags.addEventListener('change', onChangeHashInputer);
 })();

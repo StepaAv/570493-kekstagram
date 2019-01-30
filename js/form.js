@@ -7,11 +7,14 @@
   var COEF_PHOBOS = 33.3;
   var COEF_HEAT = 33.3;
 
+  var FULL_SCALE = 100;
+
   var IMG_SCALE_STEP = 25;
   var IMG_MAX_SCALE = 100;
   var IMG_MIN_SCALE = 25;
   var imgScale = 100;
 
+  var effectNamesInput = document.querySelectorAll('.effects__radio');
   var effectLevel = document.querySelector('.effect-level__value');
   var uploadInput = document.querySelector('#upload-file');
   var uploadPhotoClose = document.getElementById('upload-cancel');
@@ -43,15 +46,23 @@
   var zoomPhotoMinus = document.querySelector('.scale__control--smaller');
   var zoomPhotoValue = document.querySelector('.scale__control--value');
   var imageScale = document.querySelector('.img-upload__preview');
-
+  var errorMarkup;
   var currentFilter;
 
   var scaleRestoring = function () {
-    var i = 0;
-    do {
-      i += 1;
-      zoomPhotoPlus.click();
-    } while (i < 5);
+    imgScale = FULL_SCALE;
+    zoomPhotoValue.value = FULL_SCALE + '%';
+    imageScale.style.transform = 'scale(1)';
+  };
+
+  var setFilterDefault = function () {
+    effectNamesInput.forEach(function (effect, i) {
+      if (i === 0) {
+        effect.checked = true;
+      } else {
+        effect.checked = false;
+      }
+    });
   };
 
   var openUpload = function () {
@@ -62,6 +73,7 @@
   uploadInput.addEventListener('change', openUpload);
 
   var closeUpload = function () {
+    setFilterDefault();
     uploadInput.value = '';
     uploadPhotoForm.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
@@ -95,21 +107,11 @@
   imageScale.style.transform = 'scale(1)';
   zoomPhotoValue.value = '100%';
 
-  var plusImgScale = function () {
-    var scale = imgScale + IMG_SCALE_STEP;
+  var changeScale = function (scale) {
     if (scale > IMG_MAX_SCALE) {
       scale = IMG_MAX_SCALE;
     }
 
-    imgScale = scale;
-    zoomPhotoValue.value = scale + '%';
-    imageScale.style.transform = 'scale(' + scale / 100 + ')';
-  };
-
-  zoomPhotoPlus.addEventListener('click', plusImgScale);
-
-  var minusImgScale = function () {
-    var scale = imgScale - IMG_SCALE_STEP;
     if (scale < IMG_SCALE_STEP) {
       scale = IMG_MIN_SCALE;
     }
@@ -117,6 +119,18 @@
     imgScale = scale;
     zoomPhotoValue.value = scale + '%';
     imageScale.style.transform = 'scale(' + scale / 100 + ')';
+  };
+
+  var plusImgScale = function () {
+    var scale = imgScale + IMG_SCALE_STEP;
+    changeScale(scale);
+  };
+
+  zoomPhotoPlus.addEventListener('click', plusImgScale);
+
+  var minusImgScale = function () {
+    var scale = imgScale - IMG_SCALE_STEP;
+    changeScale(scale);
   };
 
   zoomPhotoMinus.addEventListener('click', minusImgScale);
@@ -244,13 +258,14 @@
   filterHeat.addEventListener('click', addingStyleHeat);
   filterNone.addEventListener('click', addingStyleNone);
 
-  var closingModalWithEsc = function (evt) {
+  var onClosingModalWithEsc = function (evt) {
     if (window.util.isEscKeycode(evt)) {
       closeModalWindow();
     }
   };
 
   var closeModalWindow = function () {
+    setFilterDefault();
     hashTagsInput.value = '';
     textAreaInput.value = '';
     effectLevel.value = 100;
@@ -261,7 +276,7 @@
       removeModalWindowListener(okSection, closeUpload);
       scaleRestoring();
     } else if (main.contains(notOkSection)) {
-      removeModalWindowListener(notOkSection, closingModalWithEsc);
+      removeModalWindowListener(notOkSection, onClosingModalWithEsc);
       scaleRestoring();
     }
   };
@@ -278,9 +293,30 @@
     main.appendChild(successMarkup);
   };
 
+  var closeErrorWindow = function () {
+    main.removeChild(main.querySelector('.error'));
+  };
+
+  var onClickErrorWindow = function () {
+    document.removeEventListener('keydown', onEscKyedownErrorWindow);
+    closeErrorWindow();
+  };
+
+  var onEscKyedownErrorWindow = function (e) {
+    if (window.utils.isEscKeycode(e)) {
+      document.removeEventListener('keydown', onEscKyedownErrorWindow);
+      closeErrorWindow();
+    }
+  };
+
   var errorSaveForm = function () {
     closeUpload();
-    var errorMarkup = errorTemplate.cloneNode(true);
+    errorMarkup = errorTemplate.cloneNode(true);
+    document.addEventListener('keydown', onEscKyedownErrorWindow);
+    errorMarkup.querySelectorAll('.error__button').forEach(function (btn) {
+      btn.addEventListener('click', onClickErrorWindow);
+    });
+
     main.appendChild(errorMarkup);
   };
 
@@ -288,7 +324,7 @@
     window.backend.save(new FormData(form), successingSaveForm, errorSaveForm);
     evt.preventDefault();
     main.addEventListener('click', anuBtnClickHandler);
-    document.addEventListener('keydown', closingModalWithEsc);
+    document.addEventListener('keydown', onClosingModalWithEsc);
   });
 
   var anuBtnClickHandler = function (evt) {

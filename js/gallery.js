@@ -32,8 +32,7 @@
       fragment.appendChild(onePhoto);
     });
     putInSection.appendChild(fragment);
-    window.filters.showingFilters();
-
+    window.filters.show();
   };
 
   var onSuccesLoad = function (photos) {
@@ -41,7 +40,16 @@
     renderPhotos(photos);
   };
 
-  var onErrorLoad = function () {};
+  var onErrorLoad = function () {
+    var errorElement = document.createElement('div');
+    errorElement.style =
+      'display: block; width: 100%; padding: 10px; text-align: center; background-color: red; color: white';
+    errorElement.textContent = 'ОШИБКА ЗАГРУЗКИ ДАННЫХ';
+    document.querySelector('main').appendChild(errorElement);
+    setTimeout(function () {
+      document.querySelector('main').removeChild(errorElement);
+    }, 1500);
+  };
 
   window.backend.load(onSuccesLoad, onErrorLoad);
 
